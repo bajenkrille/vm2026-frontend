@@ -1,6 +1,8 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
+const STORAGE_KEY = "tips-draft";
+
 export const useTipsStore = defineStore('tips', {
   state: () => {
     return {
@@ -12,123 +14,74 @@ export const useTipsStore = defineStore('tips', {
         //   time: '14.00',
         //   group: 'A',
         //   home: 'Bosnien-Hercegovina',
+        //   homeGoals: 0,
         //   away: 'Nederländerna',
+        //   awayGoals: 0,
         //   place: 'Mdonna di Campiglio',
-        //   tipsHomeId: 1,
-        //   tipsAwayId: 2,
-        // },
-        // {
-        //   id: 2,
-        //   weekday: 'Mon ',
-        //   date: '24/6',
-        //   time: '14.00',
-        //   group: 'A',
-        //   home: 'Argentina',
-        //   away: 'Brasilien',
-        //   place: 'Mdonna di Campiglio',
-        //   tipsHomeId: 3,
-        //   tipsAwayId: 4,
-        // },
-        // {
-        //   id: 3,
-        //   weekday: 'Tue ',
-        //   date: '25/6',
-        //   time: '14.00',
-        //   group: 'B',
-        //   home: 'Sverige',
-        //   away: 'Turkmenistan',
-        //   place: 'Mdonna di Campiglio',
-        //   tipsHomeId: 5,
-        //   tipsAwayId: 6,
-        // },
-        // {
-        //   id: 4,
-        //   weekday: 'Tue ',
-        //   date: '25/6',
-        //   time: '14.00',
-        //   group: 'B',
-        //   home: 'Kanada',
-        //   away: 'Senegal',
-        //   place: 'Mdonna di Campiglio',
-        //   tipsHomeId: 7,
-        //   tipsAwayId: 8,
-        // },
-        // {
-        //   id: 5,
-        //   weekday: 'Wed ',
-        //   date: '26/6',
-        //   time: '14.00',
-        //   group: 'C',
-        //   home: 'Franska Guyana',
-        //   away: 'Tyskland',
-        //   place: 'Mdonna di Campiglio',
-        //   tipsHomeId: 9,
-        //   tipsAwayId: 10,
-        // },
-        // {
-        //   id: 6,
-        //   weekday: 'Wed ',
-        //   date: '26/6',
-        //   time: '14.00',
-        //   group: 'C',
-        //   home: 'Frankrike',
-        //   away: 'Spanien',
-        //   place: 'Mdonna di Campiglio',
-        //   tipsHomeId: 11,
-        //   tipsAwayId: 12,
-        // },
-        // {
-        //   id: 7,
-        //   weekday: 'Thu ',
-        //   date: '27/6',
-        //   time: '14.00',
-        //   group: 'D',
-        //   home: 'Danmark',
-        //   away: 'USA',
-        //   place: 'Mdonna di Campiglio',
-        //   tipsHomeId: 13,
-        //   tipsAwayId: 14,
-        // },
-        // {
-        //   id: 8,
-        //   weekday: 'Thu ',
-        //   date: '27/6',
-        //   time: '14.00',
-        //   group: 'D',
-        //   home: 'Iran',
-        //   away: 'Israel',
-        //   place: 'Mdonna di Campiglio',
-        //   tipsHomeId: 15,
-        //   tipsAwayId: 16,
-        // },
-      ]
+        //   played: false,
+        // }
+      ],
+      tips: JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]")
     }
   },
   actions: {
-    async getMatchSchedule(){
-      try {
-        const response = await fetch("http://localhost:3000/matcher");
-        const data = await response.json();
-        this.games = 
-        console.log(data.message);
-      } catch (error) {
-        console.error("Request failed:", error);
-      }
+    setTip(matchId, index, value) {
+      const id = String(matchId);
     
+      if (!this.tips.find(game => game.matchId === id)) {
+        this.tips.push({matchId: id, tips: ['','']})
+      }
+
+      const match = this.tips.find(game => game.matchId === id)
+      match.tips[index] = value
+    
+      // this.tips[id][tipIndex] = value;
+      console.log("Sparat tips: ",match.tips[index]);
+    
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.tips));
     },
-    async sendTips(resultJson){
+    clearDraft() {
+      this.tips = {};
+      localStorage.removeItem(STORAGE_KEY);
+    },
+    async sendTips(){
       console.log("Sendtips!!!!!!");
+      const filteredTips = this.tips.filter((item) => {
+        return item.tips[0] !== '' && item.tips[1] !== ''
+      })
+      filteredTips.sort((a ,b) => a.matchId - b.matchId)
+      console.log(
+        filteredTips.map(item => item.matchId)
+      )
       const response = await fetch("http://localhost:3000/api/tippa", {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(resultJson)
+        body: JSON.stringify(filteredTips)
       });
     
       const data = await response.json();
-      console.log(data);
+      if (!response.ok) {
+        throw new Error("Failed to save tips");
+      }
 
+      console.log(data);
+      this.clearDraft();
+
+    },
+    async getTips(){
+      const response = await fetch("http://localhost:3000/api/tippa", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Accept: "application/json"        }
+      });
+      const data = await response.json();
+      this.tips = data
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.tips));
+      console.log("getTips: ",data);
     }
   }
 })

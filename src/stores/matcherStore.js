@@ -12,10 +12,11 @@ export const useMatcherStore = defineStore('matcher', {
         //   time: '14.00',
         //   group: 'A',
         //   home: 'Bosnien-Hercegovina',
+        //   homeGoals: 0,
         //   away: 'Nederländerna',
+        //   awayGoals: 0,
         //   place: 'Mdonna di Campiglio',
-        //   tipsHomeId: 1,
-        //   tipsAwayId: 2,
+        //   played: false,
         // }
       ]
     }
@@ -26,7 +27,7 @@ export const useMatcherStore = defineStore('matcher', {
         const response = await fetch("http://localhost:3000/api/matcher");
         const data = await response.json();
         this.games = data
-        // console.log(data.message);
+        console.log(data);
       } catch (error) {
         console.error("Request failed:", error);
       }
