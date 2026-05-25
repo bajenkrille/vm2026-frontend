@@ -26,7 +26,8 @@ export const useTipsStore = defineStore('tips', {
   },
   actions: {
     setTip(matchId, index, value) {
-      const id = String(matchId);
+      console.log(typeof matchId, typeof value);
+      const id = matchId;
     
       if (!this.tips.find(game => game.matchId === id)) {
         this.tips.push({matchId: id, tips: ['','']})
@@ -37,12 +38,25 @@ export const useTipsStore = defineStore('tips', {
     
       // this.tips[id][tipIndex] = value;
       console.log("Sparat tips: ",match.tips[index]);
+      console.log("VALUE:", value);
+console.log("TYPE:", typeof value);
     
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.tips));
     },
     clearDraft() {
       this.tips = {};
       localStorage.removeItem(STORAGE_KEY);
+    },
+    checkTipsComplete(){
+      let incomplete = []
+      const incompleteTips = this.tips.map((item) => {
+        console.log("tips0: ", item.tips[0], "tips1: ",item.tips[1]);
+        if (item.tips[0] === ''|| item.tips[1] === ''){
+          incomplete.push(item.matchId)
+        }
+        return incomplete
+      })
+      return incompleteTips
     },
     async sendTips(){
       console.log("Sendtips!!!!!!");
@@ -79,7 +93,14 @@ export const useTipsStore = defineStore('tips', {
           Accept: "application/json"        }
       });
       const data = await response.json();
-      this.tips = data
+      const dataStr = data.map(item => ({
+        matchId: item.matchId,
+        tips: [
+          String(item.tips[0]),
+          String(item.tips[1])
+        ]
+      }));
+      this.tips = dataStr
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.tips));
       console.log("getTips: ",data);
     }

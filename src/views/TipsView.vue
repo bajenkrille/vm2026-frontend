@@ -3,19 +3,25 @@
   import { onMounted } from 'vue';
   import { useTipsStore } from '@/stores/tipsStore'
   import { useMatcherStore } from '@/stores/matcherStore'
+  import ConfirmModal from '@/components/ConfirmModal.vue'
 
   const formreference = ref(null)
+  const showIncompleteModal = ref(false)
   const tipsStore = useTipsStore()
   const matcherStore = useMatcherStore()
   const readTips = (match, index) => {
+    if (!Array.isArray(tipsStore.tips)) {
+      return ''
+    }
+
     const savedMatch = tipsStore.tips.find(
       (item) => Number(item.matchId) === Number(match)
     )
     if (savedMatch){
-      // console.log("Den finns");
+      // console.log("Den finns",match,"Sparad: ",savedMatch.tips[index], typeof savedMatch.tips[index]);
       return savedMatch.tips[index]
     }
-    // console.log("Match: ",match,"Sparad: ",savedMatch);
+    console.log("Match: ",match,"Sparad: ",savedMatch);
     return ''  
   }
 
@@ -26,46 +32,23 @@
 
   const onSubmit = () => {
     console.log("SUBMITTED");
-    // const tipsJson = buildJson()
+    const numberOfIncompleteGames = tipsStore.checkTipsComplete().length
+    console.log("Tips: ", tipsStore.tips);
+    console.log("numberOfIncompleteGames: ",numberOfIncompleteGames);
+    const hasIncompleteTips = numberOfIncompleteGames !== 0 ? true : false// replace with your real check
+    console.log("hasIncompleteTips:", hasIncompleteTips);
+    if (hasIncompleteTips) {
+      showIncompleteModal.value = true
+      return
+    }
     tipsStore.sendTips()
     console.log("Heja Bajen ");
   }
 
-
-  const buildJson = () => {
-    const fd = new FormData(formreference.value);
-    console.log("fd" + formreference.value)
-
-    // We'll build: { bets: [ { matchId: "123", tips: ["..",".."] } ] }
-    const result = { bets: [] };
-
-    for (const [key, value] of fd.entries()) {
-      // matchId:  bets[0][matchId]
-      let m = key.match(/^bets\[(\d+)\]\[(\d+)\]$/);
-      if (m) {
-        const idx = Number(m[1]);
-        result.bets[idx] ??= {};
-        result.bets[idx].matchId = m[2];
-        continue;
-      }
-
-      // tips: bets[0][tips][]
-      m = key.match(/^bets\[(\d+)\]\[(tips)\]\[\]$/);
-      if (m) {
-        const idx = Number(m[1]);
-        result.bets[idx] ??= {};
-        result.bets[idx].tips ??= [];
-        if (value !== "") result.bets[idx].tips.push(value);
-        continue;
-      }
-    }
-
-    // Remove any gaps if indices are missing
-    result.bets = result.bets.filter(Boolean);
-
-    console.log("JSON object:", result);
-    console.log("JSON string:", JSON.stringify(result, null, 2));
-    return result
+  const saveDraft = async () => {
+    // save partial tips here
+    await tipsStore.sendTips()     
+    showIncompleteModal.value = false
   }
 
 </script>
@@ -73,6 +56,15 @@
 <template>
   <div>
     <h1>Gabbagabbahey</h1>
+    <ConfirmModal
+            v-if="showIncompleteModal"
+            title="Incomplete tips"
+            message="Some matches are not fully tipped."
+            confirmText="Save and continue later"
+            cancelText="Continue editing"
+            @confirm="saveDraft"
+            @cancel="showIncompleteModal = false"
+          />
     <form ref="formreference" action="">
       <table class="table table-dark table-hover">
         <thead>
@@ -98,7 +90,7 @@
               <div class="d-flex">
                 <span>
                   <input class="form-control tipsruta me-1" 
-                    :value="readTips(game.id, 0) ?? ''"
+                    :value="readTips(game.id, 0)"
                     @input="tipsStore.setTip(game.id, 0, $event.target.value)"
                   >
                   <!-- <input type="hidden" :name="`bets[${game.id - 1}][${ game.id }]`"> -->
