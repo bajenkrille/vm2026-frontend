@@ -2,6 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 const STORAGE_KEY = "tips-draft";
+const ANTAL_MATCHER = 72
 
 export const useTipsStore = defineStore('tips', {
   state: () => {
@@ -48,15 +49,23 @@ console.log("TYPE:", typeof value);
       localStorage.removeItem(STORAGE_KEY);
     },
     checkTipsComplete(){
-      let incomplete = []
-      const incompleteTips = this.tips.map((item) => {
-        console.log("tips0: ", item.tips[0], "tips1: ",item.tips[1]);
-        if (item.tips[0] === ''|| item.tips[1] === ''){
-          incomplete.push(item.matchId)
+      const incompleteMatches = []
+      for (let i = 1; i <= ANTAL_MATCHER; i++) {
+        const match = this.tips.find(
+          item => Number(item.matchId) === i
+        )
+        if (
+          !match ||
+          match.tips[0] === '' ||
+          match.tips[1] === '' ||
+          match.tips[0] == null ||
+          match.tips[1] == null
+        ) {
+          incompleteMatches.push(i)
         }
-        return incomplete
-      })
-      return incompleteTips
+      }
+      console.log("INCOMPLETE: ",incompleteMatches);
+      return incompleteMatches
     },
     async sendTips(){
       console.log("Sendtips!!!!!!");

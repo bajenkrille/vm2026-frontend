@@ -1,4 +1,3 @@
-import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useLoginStore = defineStore('login', {
@@ -8,10 +7,6 @@ export const useLoginStore = defineStore('login', {
   actions: {
     async loginUser(credentials){
       console.log("Har reggat: ",credentials)
-      // fetch('http://localhost:3000/login')
-      // .then(res => res.text())
-      // .then(data => console.log(data))
-      // .catch(err => console.error(err))
       const response = await fetch("http://localhost:3000/api/login", {
         method: "POST",
         headers: {
@@ -23,8 +18,17 @@ export const useLoginStore = defineStore('login', {
       const data = await response.json();
       console.log(data);
       console.log(data.token);
-      localStorage.setItem('token', data.token)
-      console.log("localStore ",localStorage.getItem("token"));    
+      if (data.token){
+        localStorage.setItem('token', data.token)
+      }
+      
+      console.log("localStore ",localStorage.getItem("token"));  
+      console.log("status: ",response.status);
+      return {
+        status: response.status,
+        ok: response.ok,
+        data
+      }
     },
     async registerUser(credentials){
       console.log("Har reggat: ",credentials)
@@ -37,7 +41,16 @@ export const useLoginStore = defineStore('login', {
       });
     
       const data = await response.json();
-      // console.log(data);
+      localStorage.setItem('token', data.token)
+      console.log("localStore ",localStorage.getItem("token"));    
+      console.log(data);
+     
+      return {
+        status: response.status,
+        ok: response.ok,
+        data
+      }
     }
   }
 })
+ 
