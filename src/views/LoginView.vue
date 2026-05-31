@@ -8,7 +8,7 @@ const loginErrors = ref(false);
 const loginMessage = ref("");
 
 const credentials = reactive({
-	email: "",
+	user: "",
 	password: "",
 });
 
@@ -45,7 +45,7 @@ const onSubmit = async () => {
 				>Användarnamn</label
 			>
 			<input
-				v-model="credentials.email"
+				v-model="credentials.user"
 				type="text"
 				class="form-control"
 				id="exampleFormControlInput1"
