@@ -130,7 +130,7 @@
       @cancel="showRules3 = false"
     />
 
-    <h1>Välkommen!</h1>
+    <h1 class="mt-3">Välkommen!</h1>
     <h3>The One and Only VM-tips 2026 är här!</h3>
     <p>Klicka nedan för att läsa reglerna och registrera dig för 2026 års kanske största evenemang.</p>
     <div class="modal-message">

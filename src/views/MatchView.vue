@@ -25,7 +25,8 @@
 
 <template>
   <div>
-    <h1>Gabbagabbahey</h1>
+    <h1 class="mt-3">Matchschema</h1>
+    <p class="mb-5">Resultaten kommer att uppdateras kontinuerligt, normalt sett mer än en gång per dag.</p>
       <table class="table table-dark table-hover">
         <thead>
           <tr>

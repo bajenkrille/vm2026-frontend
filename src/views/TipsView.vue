@@ -61,7 +61,9 @@ const saveDraft = async () => {
 
 <template>
 	<div>
-		<h1>Gabbagabbahey</h1>
+		<h1 class="mt-3">Här tippar du.</h1>
+    <p>Tippa alla resultat. Vill du inte tippa allt på en gång kan du spara och logga ut och fortsätta senare.</p>
+    <p>Det går att ändra sitt tips ända fram till avspark till utsatt avsparkstid för första matchen, dvs 11/6 kl. 21.00.</p>
 		<TwoOptionModal
 			v-if="showIncompleteModal"
 			title="Incomplete tips"
@@ -72,6 +74,9 @@ const saveDraft = async () => {
 			@cancel="showIncompleteModal = false"
 		/>
 		<form ref="formreference" action="">
+      <button @click.prevent="onSubmit" class="btn btn-success mb-3" type="submit">
+				Skicka/spara
+			</button>
 			<table class="table table-dark table-hover">
 				<thead>
 					<tr>
@@ -128,7 +133,7 @@ const saveDraft = async () => {
 				</tbody>
 			</table>
 			<button @click.prevent="onSubmit" class="btn btn-success" type="submit">
-				Skicka
+				Skicka/spara
 			</button>
 		</form>
 	</div>

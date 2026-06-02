@@ -74,7 +74,7 @@ const onSubmit = async () => {
 
 <template>
 	<br />
-	<h2>Gabbagabbahey</h2>
+	<h2 class="mb-5">Registrera dig för att komma igång och tippa!</h2>
 	<TwoOptionModal
 		v-if="validationErrors"
 		title="Incomplete tips"
@@ -127,6 +127,9 @@ const onSubmit = async () => {
 				placeholder="Pelé"
 				required
 			/>
+			<div id="userName" class="form-text">
+				Ditt användarnamn används för inloggning. Glöm det inte!
+			</div>
 		</div>
 		<div class="mb-3">
 			<label for="email" class="form-label">Email address *</label>

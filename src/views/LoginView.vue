@@ -38,6 +38,8 @@ const onSubmit = async () => {
 		@confirm="loginErrors = false"
 		@cancel="loginErrors = false"
 	/>
+	<br />
+	<h2 class="mb-3">Logga in för att komma åt ditt tips mm!</h2>
 
 	<form @submit.prevent="onSubmit" action="">
 		<div class="mb-3 mt-3">
@@ -49,7 +51,7 @@ const onSubmit = async () => {
 				type="text"
 				class="form-control"
 				id="exampleFormControlInput1"
-				placeholder="Användarnamn eller email"
+				placeholder="Användarnamn"
 			/>
 		</div>
 		<div class="b-3 mb-3">
