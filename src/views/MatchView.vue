@@ -6,6 +6,21 @@
   onMounted(() => {
     matcherStore.getMatchSchedule()
   })
+
+  const getHomeGoalColor = (game) => {
+    if (game.played === false) return 'text-bg-light'
+    if (game.homeGoals > game.awayGoals) return 'text-bg-success'
+    if (game.homeGoals < game.awayGoals) return 'text-bg-danger'
+    if (game.homeGoals === game.awayGoals) return 'text-bg-warning'
+  }
+
+  const getAwayGoalColor = (game) => {
+    if (game.played === false) return 'text-bg-light'
+    if (game.homeGoals > game.awayGoals) return 'text-bg-danger'
+    if (game.homeGoals < game.awayGoals) return 'text-bg-success'
+    if (game.homeGoals === game.awayGoals) return 'text-bg-warning'
+  }
+
 </script>
 
 <template>
@@ -34,7 +49,7 @@
               <div class="d-flex align-items-center">
                 <span class="flex-grow-1 text-center d-inline-block text-truncate team">{{ game.home }}</span>
                 <span class="d-inline-flex align-items-center justify-content-center
-           text-bg-success rounded-circle results_ball">{{ game.homeGoals }}</span>
+           rounded-circle results_ball" :class="getHomeGoalColor(game)" >{{ game.homeGoals }}</span>
               </div>
             </td>
             <td>-</td>
@@ -42,7 +57,7 @@
               <div class="d-flex align-items-center">
                 <span class="flex-grow-1 text-center d-inline-block text-truncate team">{{game.away}}</span>
                 <span class="d-inline-flex align-items-center justify-content-center
-           text-bg-danger rounded-circle results_ball">{{ game.awayGoals }}</span>
+           rounded-circle results_ball" :class="getAwayGoalColor(game)">{{ game.awayGoals }}</span>
               </div>
             </td>
             <td class="d-none d-lg-table-cell">{{ game.place }}</td>
