@@ -2,6 +2,7 @@
 import { reactive, ref } from "vue";
 import { useLoginStore } from "@/stores/loginStore";
 import router from "@/router";
+import OneOptionModal from "@/components/OneOptionModal.vue";
 import TwoOptionModal from "@/components/TwoOptionModal.vue";
 
 const credentials = reactive({
@@ -75,14 +76,12 @@ const onSubmit = async () => {
 <template>
 	<br />
 	<h2 class="mb-5">Registrera dig för att komma igång och tippa!</h2>
-	<TwoOptionModal
+	<OneOptionModal
 		v-if="validationErrors"
-		title="Incomplete tips"
+		title="Fel, fel, fel!"
 		:message="validationMessage"
-		confirmText="Fuck you"
-		cancelText="Förlåt"
-		@confirm="saveDraft"
-		@cancel="validationErrors = false"
+		confirmText="Ok"
+		@confirm="validationErrors = false"
 	/>
 	<TwoOptionModal
 		v-if="regSuccess"

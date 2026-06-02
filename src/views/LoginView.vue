@@ -9,7 +9,6 @@ const loginMessage = ref("");
 
 const credentials = reactive({
 	user: "",
-	password: "",
 });
 
 const loginStore = useLoginStore();
@@ -26,6 +25,10 @@ const onSubmit = async () => {
 		router.replace("/tippa");
 	}
 };
+
+const generateResetEmail = () => {
+  loginStore.generateResetEmail(credentials)
+}
 </script>
 
 <template>
@@ -66,5 +69,20 @@ const onSubmit = async () => {
 			<div id="passwordHelpBlock" class="form-text"></div>
 		</div>
 		<input type="submit" value="Login" class="btn btn-primary" />
+	</form>
+	<form @submit.prevent="generateResetEmail" action="">
+		<div class="mb-3 mt-5">
+			<label for="exampleFormControlInput1" class="form-label"
+				>Glömt lösenordet?</label
+			>
+			<input
+				v-model="credentials.user"
+				type="text"
+				class="form-control"
+				id="exampleFormControlInput1"
+				placeholder="Användarnamn"
+			/>
+		</div>
+		<input type="submit" value="Reset" class="btn btn-primary" />
 	</form>
 </template>

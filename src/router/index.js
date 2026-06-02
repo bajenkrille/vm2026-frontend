@@ -25,6 +25,11 @@ const router = createRouter({
       component: () => import('../views/RegisterView.vue'),
     },
     {
+      path: '/reset/:token',
+      name: 'reset',
+      component: () => import('../views/ResetView.vue'),
+    },
+    {
       path: '/matcher',
       name: 'matcher',
       component: () => import('../views/MatchView.vue'),

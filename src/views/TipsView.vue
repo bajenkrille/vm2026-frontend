@@ -132,7 +132,7 @@ const saveDraft = async () => {
 					</tr>
 				</tbody>
 			</table>
-			<button @click.prevent="onSubmit" class="btn btn-success" type="submit">
+			<button @click.prevent="onSubmit" class="btn btn-success mb-5" type="submit">
 				Skicka/spara
 			</button>
 		</form>
