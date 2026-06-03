@@ -62,7 +62,7 @@
   20% av vinstpotten går till 2:an.
   5% av vinstpotten går till 3:an.
 
-  Avgiften swishas till det nummer som följer med bekräftelsemail efter registrering.
+  Avgiften swishas till det nummer som följer med bekräftelsemail efter första inlämnade/sparade tips.
   I princip ska avgiften betalas innan VM:s första match börjar. 
   Det är inte 100% strikt, men vid underlåtelse att betala, trots påminnelser utesluts deltagaren (har aldrig hänt).
 
