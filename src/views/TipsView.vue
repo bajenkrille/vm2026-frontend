@@ -3,11 +3,14 @@ import { ref } from "vue";
 import { onMounted } from "vue";
 import { useTipsStore } from "@/stores/tipsStore";
 import { useMatcherStore } from "@/stores/matcherStore";
+import OneOptionModal from "@/components/OneOptionModal.vue";
 import TwoOptionModal from "@/components/TwoOptionModal.vue";
 
 const formreference = ref(null);
 const showIncompleteModal = ref(false);
 const incompleteMessage = ref("");
+const showTipsSentModal = ref(false);
+const tipsSentMessage = ref("");
 const tipsStore = useTipsStore();
 const matcherStore = useMatcherStore();
 const readTips = (match, index) => {
@@ -44,11 +47,13 @@ const onSubmit = () => {
 	const hasIncompleteTips = numberOfIncompleteGames !== 0 ? true : false; // replace with your real check
 	console.log("hasIncompleteTips:", hasIncompleteTips);
 	if (hasIncompleteTips) {
-		incompleteMessage.value = `There are ${numberOfIncompleteGames} matches with incomplete tips! ${gamesList}`;
+		incompleteMessage.value = `${numberOfIncompleteGames} matcher har inte tippats! ${gamesList}`;
 		showIncompleteModal.value = true;
 		return;
 	}
 	tipsStore.sendTips();
+  tipsSentMessage.value = "Ditt tips har skickats in. Ett email ska också ha skickats till dig."
+  showTipsSentModal.value = true
 	console.log("Heja Bajen ");
 };
 
@@ -56,6 +61,8 @@ const saveDraft = async () => {
 	// save partial tips here
 	await tipsStore.sendTips();
 	showIncompleteModal.value = false;
+  tipsSentMessage.value = "Ditt tips har skickats in. Ett email ska också ha skickats till dig."
+  showTipsSentModal.value = true
 };
 </script>
 
@@ -63,10 +70,17 @@ const saveDraft = async () => {
 	<div>
 		<h1 class="mt-3">Här tippar du.</h1>
     <p>Tippa alla resultat. Vill du inte tippa allt på en gång kan du spara och logga ut och fortsätta senare.</p>
-    <p>Det går att ändra sitt tips ända fram till avspark till utsatt avsparkstid för första matchen, dvs 11/6 kl. 21.00.</p>
+    <p>Det går att ändra sitt tips ända fram till utsatt avsparkstid för första matchen, dvs 11/6 kl. 21.00.</p>
+		<OneOptionModal
+			v-if="showTipsSentModal"
+			title="Tips mottaget"
+			:message="tipsSentMessage"
+			confirmText="Ok"
+			@confirm="showTipsSentModal = false"
+		/>
 		<TwoOptionModal
 			v-if="showIncompleteModal"
-			title="Incomplete tips"
+			title="Icke komplett tips"
 			:message="incompleteMessage"
 			confirmText="Save and continue later"
 			cancelText="Continue editing"

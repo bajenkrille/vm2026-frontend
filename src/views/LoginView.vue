@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, ref } from "vue";
 import { useLoginStore } from "@/stores/loginStore";
-import TwoOptionModal from "@/components/TwoOptionModal.vue";
+import OneOptionModal from "@/components/OneOptionModal.vue";
 import router from "@/router";
 
 const loginErrors = ref(false);
@@ -16,7 +16,7 @@ const loginStore = useLoginStore();
 const onSubmit = async () => {
 	const result = await loginStore.loginUser(credentials);
 	if (result.status === 401) {
-		loginMessage.value = "Fel kombination av användarnamn/email och password";
+		loginMessage.value = "Användarnamn och/eller password är felaktigt";
 		loginErrors.value = true;
 		return;
 	}
@@ -32,14 +32,12 @@ const generateResetEmail = () => {
 </script>
 
 <template>
-	<TwoOptionModal
+	<OneOptionModal
 		v-if="loginErrors"
 		title="Fel vid inloggning"
 		:message="loginMessage"
 		confirmText="OK"
-		cancelText="OK"
 		@confirm="loginErrors = false"
-		@cancel="loginErrors = false"
 	/>
 	<br />
 	<h2 class="mb-3">Logga in för att komma åt ditt tips mm!</h2>
