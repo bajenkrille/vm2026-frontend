@@ -7,7 +7,7 @@ export const useLoginStore = defineStore('login', {
   actions: {
     async loginUser(credentials){
       console.log("Har reggat: ",credentials)
-      const response = await fetch("http://localhost:3000/api/login", {
+      const response = await fetch("/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -32,7 +32,7 @@ export const useLoginStore = defineStore('login', {
     },
     async registerUser(credentials){
       console.log("Har reggat: ",credentials)
-      const response = await fetch("http://localhost:3000/api/register", {
+      const response = await fetch("/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -53,7 +53,7 @@ export const useLoginStore = defineStore('login', {
     },
     async resetPsw(credentials){
       console.log("Har reggat: ",credentials)
-      const response = await fetch("http://localhost:3000/api/reset", {
+      const response = await fetch("/api/reset", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -75,7 +75,7 @@ export const useLoginStore = defineStore('login', {
     },
     async generateResetEmail(credentials){
       console.log("Har reggat: ",credentials)
-      const response = await fetch("http://localhost:3000/api/resetEmail", {
+      const response = await fetch("/api/resetEmail", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

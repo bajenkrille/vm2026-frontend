@@ -76,7 +76,7 @@ console.log("TYPE:", typeof value);
       console.log(
         filteredTips.map(item => item.matchId)
       )
-      const response = await fetch("http://localhost:3000/api/tippa", {
+      const response = await fetch("/api/tippa", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -95,7 +95,7 @@ console.log("TYPE:", typeof value);
 
     },
     async getTips(){
-      const response = await fetch("http://localhost:3000/api/tippa", {
+      const response = await fetch("/api/tippa", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

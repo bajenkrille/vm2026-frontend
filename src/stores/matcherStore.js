@@ -24,7 +24,7 @@ export const useMatcherStore = defineStore('matcher', {
   actions: {
     async getMatchSchedule(){
       try {
-        const response = await fetch("http://localhost:3000/api/matcher");
+        const response = await fetch("/api/matcher");
         const data = await response.json();
         this.games = data
         console.log(data);
