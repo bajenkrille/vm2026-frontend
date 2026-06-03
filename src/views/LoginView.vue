@@ -7,6 +7,7 @@ import router from "@/router";
 const loginErrors = ref(false);
 const loginMessage = ref("");
 
+const userForReset = ref("")
 const credentials = reactive({
 	user: "",
 });
@@ -27,6 +28,7 @@ const onSubmit = async () => {
 };
 
 const generateResetEmail = () => {
+  credentials.user = userForReset.value
   loginStore.generateResetEmail(credentials)
 }
 </script>
@@ -74,7 +76,7 @@ const generateResetEmail = () => {
 				>Glömt lösenordet?</label
 			>
 			<input
-				v-model="credentials.user"
+				v-model="userForReset"
 				type="text"
 				class="form-control"
 				id="exampleFormControlInput1"
