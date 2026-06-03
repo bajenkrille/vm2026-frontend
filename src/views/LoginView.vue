@@ -7,6 +7,7 @@ import router from "@/router";
 const loginErrors = ref(false);
 const loginMessage = ref("");
 
+const userForLogin = ref("")
 const userForReset = ref("")
 const credentials = reactive({
 	user: "",
@@ -15,6 +16,7 @@ const credentials = reactive({
 const loginStore = useLoginStore();
 
 const onSubmit = async () => {
+  credentials.user = userForLogin.value
 	const result = await loginStore.loginUser(credentials);
 	if (result.status === 401) {
 		loginMessage.value = "Användarnamn och/eller password är felaktigt";
@@ -50,7 +52,7 @@ const generateResetEmail = () => {
 				>Användarnamn</label
 			>
 			<input
-				v-model="credentials.user"
+				v-model="userForLogin"
 				type="text"
 				class="form-control"
 				id="exampleFormControlInput1"
