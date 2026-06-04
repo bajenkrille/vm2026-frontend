@@ -2,10 +2,16 @@
 import { reactive, ref } from "vue";
 import { useLoginStore } from "@/stores/loginStore";
 import OneOptionModal from "@/components/OneOptionModal.vue";
+import { useRoute } from "vue-router";
 import router from "@/router";
+
+const route = useRoute()
 
 const loginErrors = ref(false);
 const loginMessage = ref("");
+
+const resetMailGenerated = ref(false);
+const resetMailMessage = ref("");
 
 const userForLogin = ref("")
 const userForReset = ref("")
@@ -25,13 +31,17 @@ const onSubmit = async () => {
 	}
 	console.log("STATUS: ", result.status);
 	if (result.status === 200) {
-		router.replace("/tippa");
+		// router.replace("/tippa");
+    const redirect = route.query.redirect || "/tippa"
+    router.replace(redirect)
 	}
 };
 
 const generateResetEmail = () => {
   credentials.user = userForReset.value
   loginStore.generateResetEmail(credentials)
+  resetMailMessage.value = "Ett mail har skickats med en länk för reset av ditt password."
+  resetMailGenerated.value = true
 }
 </script>
 
@@ -42,6 +52,13 @@ const generateResetEmail = () => {
 		:message="loginMessage"
 		confirmText="OK"
 		@confirm="loginErrors = false"
+	/>
+	<OneOptionModal
+		v-if="resetMailGenerated"
+		title=""
+		:message="resetMailMessage"
+		confirmText="OK"
+		@confirm="resetMailGenerated = false"
 	/>
 	<br />
 	<h2 class="mb-3">Logga in för att komma åt ditt tips mm!</h2>

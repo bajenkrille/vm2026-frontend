@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import { useLoginStore } from "@/stores/loginStore";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,6 +14,7 @@ const router = createRouter({
       path: '/tippa',
       name: 'tippa',
       component: () => import('../views/TipsView.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/login',
@@ -35,6 +37,17 @@ const router = createRouter({
       component: () => import('../views/MatchView.vue'),
     },
   ],
+})
+
+router.beforeEach((to) => {
+  const loginStore = useLoginStore()
+
+  if (to.meta.requiresAuth && !loginStore.isLoggedIn) {
+    return {
+      path: "/login",
+      query: { redirect: to.fullPath }
+    }
+  }
 })
 
 export default router

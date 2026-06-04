@@ -1,8 +1,11 @@
 import { defineStore } from 'pinia'
 
 export const useLoginStore = defineStore('login', {
-  state: () => {
-    return {}
+  state: () => ({
+    token: localStorage.getItem("token"),
+  }),
+  getters: {
+    isLoggedIn: (state) => !!state.token,
   },
   actions: {
     async loginUser(credentials){
@@ -20,6 +23,7 @@ export const useLoginStore = defineStore('login', {
       console.log(data.token);
       if (data.token){
         localStorage.setItem('token', data.token)
+        this.token = data.token
       }
       
       console.log("localStore ",localStorage.getItem("token"));  
@@ -93,7 +97,17 @@ export const useLoginStore = defineStore('login', {
         ok: response.ok,
         data
       }
+    },
+    setToken(token) {
+      this.token = token
+      localStorage.setItem("token", token)
+    },
+
+    logout() {
+      this.token = null
+      localStorage.removeItem("token")
     }
+
   }
 })
  

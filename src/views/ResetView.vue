@@ -86,7 +86,7 @@ const onSubmit = async () => {
 		<div id="passwordHelpBlock" class="form-text">
 				Välj ett lösenord som du INTE har på andra viktiga ställen. Det ska vara
 				minst 5 tecken och INTE innehålla blanksteg eller emojis.
-			</div>
+		</div>
 		<div class="b-3 mt-3 mb-3">
 			<label for="inputPassword5" class="form-label">Repetera password</label>
 			<input
