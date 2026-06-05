@@ -31,6 +31,23 @@ export const useDeltagareStore = defineStore('deltagare', {
         console.error("Request failed:", error);
       }
     
-    }
+    },
+    async setBetalning(deltagareId){
+      try {
+        console.log("deltagareId", deltagareId);
+        const response = await fetch("/api/deltagare/betalning", {
+          method: "POST",
+          headers: {
+           "Content-Type": "application/json"
+          },
+          body: JSON.stringify(deltagareId)
+        });
+        const data = await response.json();
+        console.log(data);
+      } catch (error) {
+        console.error("Request failed:", error);
+      }
+    
+    }    
   }
 })
