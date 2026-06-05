@@ -4,10 +4,12 @@
   import router from '@/router'
   import { useTipsStore } from '@/stores/tipsStore'
   import { useLoginStore } from '@/stores/loginStore'
+  import { useDeltagareStore } from './stores/deltagareStore';
   import OneOptionModal from '@/components/OneOptionModal.vue'
 
   const loginStore = useLoginStore()
   const tipsStore = useTipsStore()
+  const deltagareStore = useDeltagareStore()
   const menuOpen = ref(false)
 
   const logoutModal = ref(false);
@@ -43,6 +45,8 @@
     window.addEventListener('touchstart', resetInactivityTimer)
 
     resetInactivityTimer()
+
+    deltagareStore.getDeltagareAndCompleteness()
   })
 
   onUnmounted(() => {
@@ -85,6 +89,23 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
+
+      <span
+        class="navbar-text ms-auto me-4"
+        :class="loginStore.isLoggedIn ? 'text-success' : 'text-danger'"
+      >
+        {{ loginStore.isLoggedIn
+            ? `Inloggad som ${loginStore.userName}`
+            : 'Ej inloggad'
+        }}
+      </span>
+
+      <span
+        class="navbar-text ms-auto me-2 text-warning"
+      >
+        {{ `Antal registrerade deltagare: ${deltagareStore.deltagare.length}`
+        }}
+      </span>
 
       <div
         id="mainNavbar"

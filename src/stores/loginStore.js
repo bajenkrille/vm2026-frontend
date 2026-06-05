@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 export const useLoginStore = defineStore('login', {
   state: () => ({
     token: localStorage.getItem("token"),
+    userName: localStorage.getItem("userName"),
   }),
   getters: {
     isLoggedIn: (state) => !!state.token,
@@ -21,9 +22,12 @@ export const useLoginStore = defineStore('login', {
       const data = await response.json();
       console.log(data);
       console.log(data.token);
+      console.log("Username: ",data.user.name);
       if (data.token){
         localStorage.setItem('token', data.token)
+        localStorage.setItem('userName', data.user.name)
         this.token = data.token
+        this.userName = data.user.name
       }
       
       console.log("localStore ",localStorage.getItem("token"));  
