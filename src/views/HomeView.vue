@@ -133,6 +133,7 @@
     <h1 class="mt-3">Välkommen!</h1>
     <h3>The One and Only VM-tips 2026 är här!</h3>
     <p>Klicka nedan för att läsa reglerna och registrera dig för 2026 års kanske största evenemang.</p>
+    <p>Notera gärna att det finns en Tipsguide i menyn som kan hjälpa (eller stjälpa) med att få reda i lagdjungeln.</p>
     <div class="modal-message">
       <button @click="openRules" type="button" class="btn btn-dark">Regler</button>
     </div>

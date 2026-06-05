@@ -143,6 +143,11 @@
             </RouterLink>
           </li>
           <li class="nav-item">
+            <RouterLink class="nav-link" to="/guide" @click="menuOpen = false">
+              Tipsguide
+            </RouterLink>
+          </li>
+          <li class="nav-item">
             <button
               class="btn btn-outline-danger ms-md-3"
               @click="logout('Vi ses!')"

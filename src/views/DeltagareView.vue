@@ -22,7 +22,7 @@
   <div class="row" v-for="deltagaren in deltagareStore.deltagare">
     <div class="col-3 bg-light border">{{ deltagaren.user }}</div>
     <div class="col-7 bg-light border">{{ deltagaren.fornamn }}&nbsp;{{ deltagaren.efternamn }}</div>
-    <div class="col-1 bg-light border">{{deltagaren.antal_tips}}</div>
+    <div class="col-1 border" :class="deltagaren.antal_tips === 72 ? 'bg-success' : 'bg-light'">{{deltagaren.antal_tips}}</div>
     <div class="col-1 bg-light border">{{ deltagaren.betalat }}</div>
   </div>
 

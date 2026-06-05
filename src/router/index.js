@@ -17,6 +17,11 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
+      path: '/guide',
+      name: 'guide',
+      component: () => import('../views/VMGuideView.vue'),
+    },
+    {
       path: '/deltagare',
       name: 'deltagare',
       component: () => import('../views/DeltagareView.vue'),
