@@ -22,10 +22,8 @@ const readTips = (match, index) => {
 		(item) => Number(item.matchId) === Number(match)
 	);
 	if (savedMatch) {
-		// console.log("Den finns",match,"Sparad: ",savedMatch.tips[index], typeof savedMatch.tips[index]);
 		return savedMatch.tips[index];
 	}
-	// console.log("Match: ",match,"Sparad: ",savedMatch);
 	return "";
 };
 
@@ -130,11 +128,8 @@ const saveDraft = async () => {
 										:value="readTips(game.id, 0)"
 										@input="tipsStore.setTip(game.id, 0, $event.target.value)"
 									/>
-									<!-- <input type="hidden" :name="`bets[${game.id - 1}][${ game.id }]`"> -->
-									<!-- <input class="form-control tipsruta me-1" :name="`bets[${ game.id - 1}][tips][]`" maxlength="2" placeholder="H">     -->
 								</span>
 								<span>
-									<!-- <input class="form-control tipsruta" :name="`bets[${ game.id - 1}][tips][]`" maxlength="2" placeholder="A">     -->
 									<input
 										class="form-control tipsruta"
 										:value="readTips(game.id, 1)"

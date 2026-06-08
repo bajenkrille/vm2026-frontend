@@ -7,7 +7,8 @@
 
   const submitSelected = async () => {
     console.log("selected: ",selected.value);
-    deltagareStore.setBetalning(selected.value)
+    await deltagareStore.setBetalning(selected.value)
+    await deltagareStore.getDeltagareAndCompleteness()
   }
 
   onMounted(() => {
@@ -30,7 +31,7 @@
     <div class="col-1 bg-light border"><b>Betalat</b></div>
     <div class="col-1 bg-light border"><b></b></div>
   </div>
-  <div class="row" v-for="deltagaren in deltagareStore.deltagare">
+  <div class="row" v-for="deltagaren in deltagareStore.deltagareStatus">
     <div class="col-3 bg-light border">{{ deltagaren.user }}</div>
     <div class="col-6 bg-light border">{{ deltagaren.fornamn }}&nbsp;{{ deltagaren.efternamn }}</div>
     <div class="col-1 border" :class="deltagaren.antal_tips === 72 ? 'bg-success' : 'bg-light'">{{deltagaren.antal_tips}}</div>

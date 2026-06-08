@@ -110,6 +110,7 @@ export const useLoginStore = defineStore('login', {
     logout() {
       this.token = null
       localStorage.removeItem("token")
+      localStorage.removeItem("userName")
     }
 
   }

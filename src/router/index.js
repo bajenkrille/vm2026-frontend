@@ -17,6 +17,12 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
+      path: '/allatips',
+      name: 'allatips',
+      component: () => import('../views/AllaTipsView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/guide',
       name: 'guide',
       component: () => import('../views/VMGuideView.vue'),

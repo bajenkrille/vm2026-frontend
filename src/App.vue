@@ -57,12 +57,6 @@
     window.removeEventListener('click', resetInactivityTimer)
     window.removeEventListener('touchstart', resetInactivityTimer)
   })
-  // onMounted(() => {
-  //   fetch('http://localhost:3000/api/bajen')
-  //     .then(res => res.text())
-  //     // .then(data => console.log(data))
-  //     .catch(err => console.error(err))
-  // })
 </script>
 <template>
  	<OneOptionModal
@@ -103,7 +97,7 @@
       <span
         class="navbar-text ms-auto me-2 text-warning"
       >
-        {{ `Antal registrerade deltagare: ${deltagareStore.deltagare.length}`
+        {{ `Antal registrerade deltagare: ${deltagareStore.deltagareStatus.length}`
         }}
       </span>
 
@@ -142,6 +136,11 @@
               Tippa
             </RouterLink>
           </li>
+          <!-- <li class="nav-item">
+            <RouterLink class="nav-link" to="/allatips" @click="menuOpen = false">
+              Alla tips
+            </RouterLink>
+          </li> -->
           <li class="nav-item">
             <RouterLink class="nav-link" to="/guide" @click="menuOpen = false">
               Tipsguide

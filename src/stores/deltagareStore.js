@@ -3,7 +3,8 @@ import { defineStore } from 'pinia'
 export const useDeltagareStore = defineStore('deltagare', {
   state: () => {
     return {
-      deltagare: [
+      deltagare: [],
+      deltagareStatus: [
         // {
         //   id: 1,
         //   weekday: 'Mon ',
@@ -21,11 +22,22 @@ export const useDeltagareStore = defineStore('deltagare', {
     }
   },
   actions: {
+    async getDeltagare(){
+      try {
+        const response = await fetch("/api/deltagare");
+        const data = await response.json();
+        this.deltagare = data
+        console.log("I deltagareStore: ",this.deltagare);
+      } catch (error) {
+        console.error("Request failed:", error);
+      }
+    
+    },
     async getDeltagareAndCompleteness(){
       try {
         const response = await fetch("/api/deltagare/tippat");
         const data = await response.json();
-        this.deltagare = data
+        this.deltagareStatus = data
         console.log(data);
       } catch (error) {
         console.error("Request failed:", error);
@@ -43,7 +55,7 @@ export const useDeltagareStore = defineStore('deltagare', {
           body: JSON.stringify(deltagareId)
         });
         const data = await response.json();
-        console.log(data);
+        console.log("Betalning set: ",data);
       } catch (error) {
         console.error("Request failed:", error);
       }

@@ -22,7 +22,8 @@ export const useTipsStore = defineStore('tips', {
         //   played: false,
         // }
       ],
-      tips: JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]")
+      tips: JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"),
+      tipsMap: {}
     }
   },
   actions: {
@@ -66,6 +67,16 @@ console.log("TYPE:", typeof value);
       }
       console.log("INCOMPLETE: ",incompleteMatches);
       return incompleteMatches
+    },
+    generateTipsMap(tips){
+      const map = {}
+      for (const tip of tips) {
+        if (!map[tip.deltagareId]) {
+          map[tip.deltagareId] = {}
+        }
+        map[tip.deltagareId][tip.matchId] = tip.tips
+      }
+      return map
     },
     async sendTips(){
       console.log("Sendtips!!!!!!");
@@ -112,6 +123,30 @@ console.log("TYPE:", typeof value);
       this.tips = dataStr
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.tips));
       console.log("getTips: ",data);
+    },
+    async getAllTips(){
+      const response = await fetch("/api/tippa/allatips", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Accept: "application/json"        }
+      });
+      const data = await response.json();
+      console.log("tipsStore: ",data);
+
+      const dataStr = data.map(item => ({
+        deltagareId: item.deltagareId,
+        matchId: item.matchId,
+        tips: [
+          String(item.tips[0]),
+          String(item.tips[1])
+        ]
+      }));
+      this.tipsMap = this.generateTipsMap(dataStr)
+
+      // this.tips = dataStr
+      // localStorage.setItem(STORAGE_KEY, JSON.stringify(this.tips));
+      // console.log("getTips: ",data);
     }
   }
 })
