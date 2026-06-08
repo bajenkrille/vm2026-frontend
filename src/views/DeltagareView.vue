@@ -9,6 +9,7 @@
     console.log("selected: ",selected.value);
     await deltagareStore.setBetalning(selected.value)
     await deltagareStore.getDeltagareAndCompleteness()
+    selected.value = []
   }
 
   onMounted(() => {

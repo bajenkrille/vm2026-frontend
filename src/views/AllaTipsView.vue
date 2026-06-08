@@ -4,13 +4,9 @@ import { onMounted } from "vue";
 import { useTipsStore } from "@/stores/tipsStore";
 import { useMatcherStore } from "@/stores/matcherStore";
 import { useDeltagareStore } from "@/stores/deltagareStore"
-import OneOptionModal from "@/components/OneOptionModal.vue";
-import TwoOptionModal from "@/components/TwoOptionModal.vue";
 
-const showIncompleteModal = ref(false);
-const incompleteMessage = ref("");
-const showTipsSentModal = ref(false);
-const tipsSentMessage = ref("");
+const showMenu = ref(false)
+const pageSize = ref('20')
 const tipsStore = useTipsStore();
 const matcherStore = useMatcherStore();
 const deltagareStore = useDeltagareStore();
@@ -23,10 +19,15 @@ onMounted(() => {
 });
 
 const deltagarSida = ref(0)
-const deltagarePerSida = 5
+const deltagarePerSida = ref('5')
+
+const setDeltagarePerSida = (antal) => {
+	deltagarePerSida.value = antal
+	showMenu.value = false
+}
 const synligaDeltagare = computed(() => {
-	const start = deltagarSida.value * deltagarePerSida
-	return deltagareStore.deltagare.slice(start, start + deltagarePerSida)
+	const start = deltagarSida.value * deltagarePerSida.value
+	return deltagareStore.deltagare.slice(start, start + deltagarePerSida.value)
 })
 </script>
 
@@ -34,23 +35,41 @@ const synligaDeltagare = computed(() => {
 	<div>
 		<h1 class="mt-3">Allas tips.</h1>
     <p>Det går att ändra sitt tips ända fram till utsatt avsparkstid för första matchen, dvs 11/6 kl. 21.00.</p>
-		<OneOptionModal
-			v-if="showTipsSentModal"
-			title="Tips mottaget"
-			:message="tipsSentMessage"
-			confirmText="Ok"
-			@confirm="showTipsSentModal = false"
-		/>
-		<button @click="deltagarSida--" :disabled="deltagarSida === 0">
+		<button type="button" class="btn btn-dark" @click="deltagarSida--" :disabled="deltagarSida === 0">
 			Previous participants
 		</button>
 
-		<button
+		<button type="button" class="btn btn-dark"
 			@click="deltagarSida++"
-			:disabled="(deltagarSida + 1) * pageSize >= deltagareStore.deltagare.length"
+			:disabled="(deltagarSida + 1) * deltagarePerSida >= deltagareStore.deltagare.length"
 		>
 			Next participants
 		</button>
+		<div class="dropdown position-relative d-inline-block">
+			<button
+				class="btn btn-secondary dropdown-toggle"
+				type="button"
+				@click="showMenu = !showMenu"
+			>
+				Visa {{ deltagarePerSida }}
+			</button>
+
+			<ul
+				v-if="showMenu"
+				class="dropdown-menu show"
+				style="position: absolute; top: 100%; left: 0;"
+			>
+				<li v-for="size in [5, 10, 20, 50]" :key="size">
+					<button
+						class="dropdown-item"
+						type="button"
+						@click="setDeltagarePerSida(size)"
+					>
+						{{ size }}
+					</button>
+				</li>
+			</ul>
+		</div>
 		<table class="table table-dark table-hover">
 			<thead>
 				<tr>
