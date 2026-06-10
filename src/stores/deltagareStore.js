@@ -59,7 +59,6 @@ export const useDeltagareStore = defineStore('deltagare', {
       } catch (error) {
         console.error("Request failed:", error);
       }
-    
     }    
   }
 })

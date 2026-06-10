@@ -17,6 +17,18 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
+      path: '/ratta',
+      name: 'ratta',
+      component: () => import('../views/RattaView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/allatips2',
+      name: 'allatips2',
+      component: () => import('../views/AllaTipsView2.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/allatips',
       name: 'allatips',
       component: () => import('../views/AllaTipsView.vue'),

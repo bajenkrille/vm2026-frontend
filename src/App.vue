@@ -16,8 +16,9 @@
   const logoutMessage = ref("");
 
   const logout = (msg) => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('tips-draft')
+    // localStorage.removeItem('token')
+    // localStorage.removeItem('tips-draft')
+    loginStore.logout()
     tipsStore.$reset()
     loginStore.$reset()
     menuOpen.value = false

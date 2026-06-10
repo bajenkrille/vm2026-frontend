@@ -31,7 +31,21 @@ export const useMatcherStore = defineStore('matcher', {
       } catch (error) {
         console.error("Request failed:", error);
       }
+    },
+    async setResults(results){
+      try {
+        const response = await fetch("/api/matcher", {
+          method: "POST",
+          headers: {
+           "Content-Type": "application/json"
+          },
+          body: JSON.stringify(results)
+        });
+        const data = await response.json();
+        console.log("Lagrade resultat: ",data);
+      } catch (error) {
+        console.error("Request failed:", error);
+      }
     
-    }
-  }
+    }  }
 })

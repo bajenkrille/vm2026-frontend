@@ -111,6 +111,7 @@ export const useLoginStore = defineStore('login', {
       this.token = null
       localStorage.removeItem("token")
       localStorage.removeItem("userName")
+      localStorage.removeItem('tips-draft')
     }
 
   }

@@ -3,14 +3,7 @@ import { ref } from "vue";
 import { onMounted } from "vue";
 import { useTipsStore } from "@/stores/tipsStore";
 import { useMatcherStore } from "@/stores/matcherStore";
-import OneOptionModal from "@/components/OneOptionModal.vue";
-import TwoOptionModal from "@/components/TwoOptionModal.vue";
 
-const formreference = ref(null);
-const showIncompleteModal = ref(false);
-const incompleteMessage = ref("");
-const showTipsSentModal = ref(false);
-const tipsSentMessage = ref("");
 const tipsStore = useTipsStore();
 const matcherStore = useMatcherStore();
 const readTips = (match, index) => {
@@ -29,62 +22,36 @@ const readTips = (match, index) => {
 
 onMounted(() => {
 	matcherStore.getMatchSchedule();
-	tipsStore.getTips();
+	// tipsStore.getTips();
 });
+
+let results = []
+const setTip = (matchId, index, goal) => {
+	console.log("matchId: ",matchId,"index: ",index, "goal: ",goal);
+	let match = results.find(match => match.id === matchId)
+	console.log("match: ",match);
+	if (!match){
+		match = {id: matchId, goals: ['',''], played: true}
+		results.push(match)
+	}
+	match.goals[index] = goal
+}
 
 const onSubmit = () => {
 	console.log("SUBMITTED");
-	const incompleteGames = tipsStore.checkTipsComplete();
-	const numberOfIncompleteGames = incompleteGames.length;
-	let gamesList = "";
-	if (numberOfIncompleteGames !== 0 && numberOfIncompleteGames < 11) {
-		gamesList = incompleteGames;
-	}
-	const hasIncompleteTips = numberOfIncompleteGames !== 0 ? true : false; // replace with your real check
-	if (hasIncompleteTips) {
-		incompleteMessage.value = `${numberOfIncompleteGames} matcher har inte tippats! ${gamesList}`;
-		showIncompleteModal.value = true;
-		return;
-	}
-	tipsStore.sendTips();
-  tipsSentMessage.value = "Ditt tips har skickats in. Ett email ska också ha skickats till dig."
-  showTipsSentModal.value = true
+	matcherStore.setResults(results);
 	console.log("Heja Bajen ");
-};
-
-const saveDraft = async () => {
-	// save partial tips here
-	await tipsStore.sendTips();
-	showIncompleteModal.value = false;
-  tipsSentMessage.value = "Ditt tips har skickats in. Ett email ska också ha skickats till dig."
-  showTipsSentModal.value = true
 };
 </script>
 
 <template>
 	<div>
-		<h1 class="mt-3">Här tippar du.</h1>
+		<h1 class="mt-3">Rätta.</h1>
     <p>Tippa alla resultat. Vill du inte tippa allt på en gång kan du spara och logga ut och fortsätta senare.</p>
     <p>Det går att ändra sitt tips ända fram till utsatt avsparkstid för första matchen, dvs 11/6 kl. 21.00.</p>
-		<OneOptionModal
-			v-if="showTipsSentModal"
-			title="Tips mottaget"
-			:message="tipsSentMessage"
-			confirmText="Ok"
-			@confirm="showTipsSentModal = false"
-		/>
-		<TwoOptionModal
-			v-if="showIncompleteModal"
-			title="Icke komplett tips"
-			:message="incompleteMessage"
-			confirmText="Save and continue later"
-			cancelText="Continue editing"
-			@confirm="saveDraft"
-			@cancel="showIncompleteModal = false"
-		/>
-		<form ref="formreference" action="">
+		<form action="">
       <button @click.prevent="onSubmit" class="btn btn-success mb-3" type="submit">
-				Skicka/spara
+				Rätta
 			</button>
 			<table class="table table-dark table-hover">
 				<thead>
@@ -122,15 +89,15 @@ const saveDraft = async () => {
 								<span>
 									<input
 										class="form-control tipsruta me-1"
-										:value="readTips(game.id, 0)"
-										@input="tipsStore.setTip(game.id, 0, $event.target.value)"
+										@input="setTip(game.id, 0, $event.target.value)"
+										:disabled="game.played === true"
 									/>
 								</span>
 								<span>
 									<input
 										class="form-control tipsruta"
-										:value="readTips(game.id, 1)"
-										@input="tipsStore.setTip(game.id, 1, $event.target.value)"
+										@input="setTip(game.id, 1, $event.target.value)"
+										:disabled="game.played === true"
 									/>
 								</span>
 							</div>
@@ -139,7 +106,7 @@ const saveDraft = async () => {
 				</tbody>
 			</table>
 			<button @click.prevent="onSubmit" class="btn btn-success mb-5" type="submit">
-				Skicka/spara
+				Rätta
 			</button>
 		</form>
 	</div>

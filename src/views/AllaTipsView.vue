@@ -6,7 +6,7 @@ import { useMatcherStore } from "@/stores/matcherStore";
 import { useDeltagareStore } from "@/stores/deltagareStore"
 
 const showMenu = ref(false)
-const pageSize = ref('20')
+const hovered = ref(null)
 const tipsStore = useTipsStore();
 const matcherStore = useMatcherStore();
 const deltagareStore = useDeltagareStore();
@@ -16,6 +16,7 @@ onMounted(() => {
 	console.log("Alla deltagare: ",deltagareStore.deltagare);
 	matcherStore.getMatchSchedule();
 	tipsStore.getAllTips();
+	tipsStore.getAndStorePoints();
 });
 
 const deltagarSida = ref(0)
@@ -29,6 +30,32 @@ const synligaDeltagare = computed(() => {
 	const start = deltagarSida.value * deltagarePerSida.value
 	return deltagareStore.deltagare.slice(start, start + deltagarePerSida.value)
 })
+
+const getHomeGoalColor = (game) => {
+	if (game.played === false) return 'text-bg-light'
+	if (game.homeGoals > game.awayGoals) return 'text-bg-success'
+	if (game.homeGoals < game.awayGoals) return 'text-bg-danger'
+	if (game.homeGoals === game.awayGoals) return 'text-bg-warning'
+}
+
+const getAwayGoalColor = (game) => {
+	if (game.played === false) return 'text-bg-light'
+	if (game.homeGoals > game.awayGoals) return 'text-bg-danger'
+	if (game.homeGoals < game.awayGoals) return 'text-bg-success'
+	if (game.homeGoals === game.awayGoals) return 'text-bg-warning'
+}
+
+const getPointsColor = (points) => {
+	if (points === 0) console.log("points: ",points);
+	if (points === 1) console.log("points: ",points);
+	if (points === 2) console.log("points: ",points);
+	if (points === 3) console.log("points: ",points);
+	if (points === 0) return 'text-bg-dark'
+	if (points === 1) return 'text-bg-warning'
+	if (points === 2) return 'text-bg-danger'
+	if (points === 3) return 'text-bg-success'
+}
+
 </script>
 
 <template>
@@ -70,38 +97,49 @@ const synligaDeltagare = computed(() => {
 				</li>
 			</ul>
 		</div>
-		<table class="table table-dark table-hover">
+		<table class="table table-dark table-hover tips-table">
 			<thead>
 				<tr>
-					<th class="col_match" scope="col">#</th>
-					<th class="col_date" scope="col">Date</th>
-					<th class="col_team" scope="col">Home</th>
-					<th class="col_dash" scope="col">-</th>
-					<th class="col_team" scope="col">Away</th>
-					<th v-for="deltagare in synligaDeltagare" :key="deltagare.id" class="col_tips" scope="col">{{ deltagare.nick_name }}</th>
+					<th class="sticky-col col_match" scope="col">#</th>
+					<th class="sticky-col col_date" scope="col">Date</th>
+					<th class="sticky-col col_team" scope="col">Home</th>
+					<th class="sticky-col col_dash" scope="col">-</th>
+					<th class="sticky-col col_team" scope="col">Away</th>
+ 					<th v-for="deltagare in synligaDeltagare" :key="deltagare.id" class="col_tips" scope="col">
+						<span class="username-wrapper" @mouseenter="hovered = deltagare.nick_name" @mouseleave="hovered = null">
+							<span class="username-cell">{{ deltagare.nick_name }}</span>
+							<span v-if="hovered === deltagare.nick_name" class="custom-tooltip">
+								{{ deltagare.nick_name }}
+							</span>
+						</span>
+					</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="game in matcherStore.games">
-					<th scope="row">{{ game.id }}</th>
-					<td>
+				<tr v-for="game in matcherStore.games" :key="game.id">
+					<th class="sticky-col" scope="row">{{ game.id }}</th>
+					<td class="sticky-col">
 						<span>{{ game.date }}</span>
 					</td>
-					<td class="col_team">
-						<span class="team d-inline-block text-truncate">{{
-							game.home
-						}}</span>
+					<td>
+						<div class="sticky-col d-flex align-items-center">
+							<span class="flex-grow-1 text-center d-inline-block text-truncate team">{{ game.home }}</span>
+							<span class="d-inline-flex align-items-center justify-content-center
+					rounded-circle results_ball" :class="getHomeGoalColor(game)" >{{ game.homeGoals }}</span>
+						</div>
 					</td>
-					<td>-</td>
-					<td class="col_team">
-						<span class="team d-inline-block text-truncate">{{
-							game.away
-						}}</span>
+					<td class="sticky-col">-</td>
+					<td>
+						<div class="sticky-col d-flex align-items-center">
+							<span class="flex-grow-1 text-center d-inline-block text-truncate team">{{game.away}}</span>
+							<span class="d-inline-flex align-items-center justify-content-center
+					rounded-circle results_ball" :class="getAwayGoalColor(game)">{{ game.awayGoals }}</span>
+						</div>
 					</td>
-					<td v-for="usr in synligaDeltagare">
+ 					<td v-for="usr in synligaDeltagare" :key="usr.id">
 						<div class="d-flex">
 							<span>{{ tipsStore.tipsMap[usr.id]?.[game.id]?.join('-') ?? '' }}</span>
-							<span>
+							<span class="rounded-circle points_ball"  :class="getPointsColor(tipsStore.points[usr.id]?.[game.id] ?? '')">
 								<!-- <input
 									class="form-control tipsruta"
 									:value="readTips(game.id, 1)"
@@ -117,6 +155,26 @@ const synligaDeltagare = computed(() => {
 </template>
 
 <style scoped>
+.results_ball {
+	height: 25px;
+	width: 25px;
+	font-size: large;
+}
+.points_ball {
+	height: 10px;
+	width: 10px;
+	font-size: large;
+}
+  
+.tips-table {
+  white-space: nowrap;
+}
+
+.sticky-col {
+  position: sticky;
+  z-index: 2;
+}
+
 .tipsruta {
 	width: 2.5rem;
 	height: 2rem;
@@ -146,6 +204,32 @@ const synligaDeltagare = computed(() => {
 
 .col_tips {
 	width: 100px;
+}
+
+.username-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.username-cell {
+  max-width: 70px;      /* choose what fits */
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+}
+
+.custom-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  padding: 6px 10px;
+  background: #333;
+  color: white;
+  font-size: 1rem;
+  white-space: nowrap;
+  z-index: 1000;
 }
 
 .tipsruta {

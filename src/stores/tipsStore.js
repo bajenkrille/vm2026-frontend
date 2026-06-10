@@ -1,4 +1,3 @@
-import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 const STORAGE_KEY = "tips-draft";
@@ -23,7 +22,8 @@ export const useTipsStore = defineStore('tips', {
         // }
       ],
       tips: JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"),
-      tipsMap: {}
+      tipsMap: {},
+      points: {}
     }
   },
   actions: {
@@ -75,6 +75,16 @@ console.log("TYPE:", typeof value);
           map[tip.deltagareId] = {}
         }
         map[tip.deltagareId][tip.matchId] = tip.tips
+      }
+      return map
+    },
+    generatePointsMap(pointsArray){
+      const map = {}
+      for (const p of pointsArray) {
+        if (!map[p.deltagareId]) {
+          map[p.deltagareId] = {}
+        }
+        map[p.deltagareId][p.matchId] = p.points
       }
       return map
     },
@@ -143,10 +153,13 @@ console.log("TYPE:", typeof value);
         ]
       }));
       this.tipsMap = this.generateTipsMap(dataStr)
-
-      // this.tips = dataStr
-      // localStorage.setItem(STORAGE_KEY, JSON.stringify(this.tips));
-      // console.log("getTips: ",data);
+    },
+    async getAndStorePoints(){
+      
+      const response = await fetch("/api/tippa/points");
+      const data = await response.json();
+      console.log("getAndStorePoints: ",data);
+      this.points = this.generatePointsMap(data)
     }
   }
 })
