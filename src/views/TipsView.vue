@@ -32,7 +32,7 @@ onMounted(() => {
 	tipsStore.getTips();
 });
 
-const onSubmit = () => {
+const onSubmit = async () => {
 	console.log("SUBMITTED");
 	const incompleteGames = tipsStore.checkTipsComplete();
 	const numberOfIncompleteGames = incompleteGames.length;
@@ -46,18 +46,32 @@ const onSubmit = () => {
 		showIncompleteModal.value = true;
 		return;
 	}
-	tipsStore.sendTips();
-  tipsSentMessage.value = "Ditt tips har skickats in. Ett email ska också ha skickats till dig."
-  showTipsSentModal.value = true
+	try {
+		const res = await tipsStore.sendTips();
+		tipsSentMessage.value = "Ditt tips har skickats in. Ett email ska också ha skickats till dig."
+	  showTipsSentModal.value = true
+	} catch (error) {
+		tipsSentMessage.value = "Något gick fel. Försök igen."
+		showTipsSentModal.value = true
+	}
 	console.log("Heja Bajen ");
 };
 
 const saveDraft = async () => {
 	// save partial tips here
-	await tipsStore.sendTips();
-	showIncompleteModal.value = false;
-  tipsSentMessage.value = "Ditt tips har skickats in. Ett email ska också ha skickats till dig."
-  showTipsSentModal.value = true
+	try {
+		await tipsStore.sendTips();
+		showIncompleteModal.value = false;
+		tipsSentMessage.value = "Ditt tips har skickats in. Ett email ska också ha skickats till dig."
+  	showTipsSentModal.value = true
+	} catch (error) {
+		showIncompleteModal.value = false;
+		tipsSentMessage.value = "Något gick fel. Försök igen."
+		showTipsSentModal.value = true
+	}
+	// showIncompleteModal.value = false;
+  // tipsSentMessage.value = "Ditt tips har skickats in. Ett email ska också ha skickats till dig."
+  // showTipsSentModal.value = true
 };
 </script>
 
