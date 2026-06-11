@@ -46,31 +46,31 @@ const getAwayGoalColor = (game) => {
 }
 
 const getPointsColor = (points) => {
-	if (points === 0) console.log("points: ",points);
-	if (points === 1) console.log("points: ",points);
-	if (points === 2) console.log("points: ",points);
-	if (points === 3) console.log("points: ",points);
 	if (points === 0) return 'text-bg-dark'
 	if (points === 1) return 'text-bg-warning'
-	if (points === 2) return 'text-bg-danger'
-	if (points === 3) return 'text-bg-success'
+	if (points === 2) return 'text-bg-success'
+	if (points === 3) return 'text-bg-danger'
 }
 
 </script>
 
 <template>
 	<div>
-		<h1 class="mt-3">Allas tips.</h1>
-    <p>Det går att ändra sitt tips ända fram till utsatt avsparkstid för första matchen, dvs 11/6 kl. 21.00.</p>
+		<h1 class="mt-3">Alla tips</h1>
+    <p>Här finns allas tips. Du kan välja hur många deltagares tips du vill se i taget och stega dig fram genom alla deltagare.</p>
+		<p>För spelade matcher indikeras matchtipsets framgångsgrad med en liten färgindikator.</p>
+		<p><span class="text-bg-danger">Röd = 3p</span></p>
+		<p><span class="text-bg-success">Grön = 2p</span></p>
+		<p><span class="text-bg-warning">Gul = 1p</span></p>
 		<button type="button" class="btn btn-dark" @click="deltagarSida--" :disabled="deltagarSida === 0">
-			Previous participants
+			Föregående
 		</button>
 
 		<button type="button" class="btn btn-dark"
 			@click="deltagarSida++"
 			:disabled="(deltagarSida + 1) * deltagarePerSida >= deltagareStore.deltagare.length"
 		>
-			Next participants
+			Nästa
 		</button>
 		<div class="dropdown position-relative d-inline-block">
 			<button
@@ -86,7 +86,7 @@ const getPointsColor = (points) => {
 				class="dropdown-menu show"
 				style="position: absolute; top: 100%; left: 0;"
 			>
-				<li v-for="size in [5, 10, 20, 50]" :key="size">
+				<li v-for="size in [5, 10, 15, 50]" :key="size">
 					<button
 						class="dropdown-item"
 						type="button"
@@ -139,7 +139,7 @@ const getPointsColor = (points) => {
  					<td v-for="usr in synligaDeltagare" :key="usr.id">
 						<div class="d-flex">
 							<span>{{ tipsStore.tipsMap[usr.id]?.[game.id]?.join('-') ?? '' }}</span>
-							<span class="rounded-circle points_ball"  :class="getPointsColor(tipsStore.points[usr.id]?.[game.id] ?? '')">
+							<span class="rounded-circle points_ball"  :class="getPointsColor(tipsStore.pointsMap[usr.id]?.[game.id] ?? '')">
 								<!-- <input
 									class="form-control tipsruta"
 									:value="readTips(game.id, 1)"

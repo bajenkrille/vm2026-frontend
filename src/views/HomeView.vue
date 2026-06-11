@@ -16,7 +16,7 @@
   Rätt resultat ger 2 eller 3 poäng (se senare förklaring).
   Rätt tecken, dvs hemma- eller bortavinst eller oavgjort, ger 1 poäng.
   Flest poäng efter 72 matcher vinner.
-  Vid lika poäng räknas först flest 3-poängare, därefter flest rätt resultat (2- och 3-poängare) 
+  Vid lika poäng räknas först flest 3-poängare, därefter flest rätt resultat (2- och 3-poängare) 
   och om det fortfarande är lika, flest poänggivande matcher (1-, 2- och 3-poängare).
 
   Hela insatspotten (minst) går tillbaka som vinst.

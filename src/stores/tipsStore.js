@@ -23,7 +23,8 @@ export const useTipsStore = defineStore('tips', {
       ],
       tips: JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"),
       tipsMap: {},
-      points: {}
+      pointsMap: {},
+      pointsArray: []
     }
   },
   actions: {
@@ -159,7 +160,8 @@ console.log("TYPE:", typeof value);
       const response = await fetch("/api/tippa/points");
       const data = await response.json();
       console.log("getAndStorePoints: ",data);
-      this.points = this.generatePointsMap(data)
+      this.pointsArray = data
+      this.pointsMap = this.generatePointsMap(data)
     }
   }
 })

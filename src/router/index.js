@@ -23,6 +23,11 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
+      path: '/stallning',
+      name: 'stallning',
+      component: () => import('../views/StallningView.vue'),
+    },
+    {
       path: '/allatips',
       name: 'allatips',
       component: () => import('../views/AllaTipsView.vue'),
