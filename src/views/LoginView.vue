@@ -37,11 +37,16 @@ const onSubmit = async () => {
 	}
 };
 
-const generateResetEmail = () => {
+const generateResetEmail = async () => {
   credentials.user = userForReset.value
-  loginStore.generateResetEmail(credentials)
-  resetMailMessage.value = "Ett mail har skickats med en länk för reset av ditt password."
-  resetMailGenerated.value = true
+  const result = await loginStore.generateResetEmail(credentials)
+	if (result.status === 200){
+	  resetMailMessage.value = "Ett mail har skickats med en länk för reset av ditt password."
+  	resetMailGenerated.value = true
+	} else {
+	  resetMailMessage.value = "Något gick fel. Det ska vara användarnamn och inte email."
+  	resetMailGenerated.value = true
+	}
 }
 </script>
 
