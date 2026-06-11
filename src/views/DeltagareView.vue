@@ -24,7 +24,7 @@
   <button class="btn btn-primary" @click="submitSelected">
     Submit selected
   </button>
-
+              
   <div class="row">
     <div class="col-3 bg-light border"><b>Användarnamn</b></div>
     <div class="col-6 bg-light border"><b>För- och efternamn</b></div>

@@ -31,7 +31,6 @@ const router = createRouter({
       path: '/allatips',
       name: 'allatips',
       component: () => import('../views/AllaTipsView.vue'),
-      meta: { requiresAuth: true }
     },
     {
       path: '/guide',

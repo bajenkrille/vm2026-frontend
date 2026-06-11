@@ -121,10 +121,16 @@
           </li>
 
           <li class="nav-item">
+            <RouterLink class="nav-link" to="/allatips" @click="menuOpen = false">
+              Tipsrader
+            </RouterLink>
+          </li>
+<!-- 
+          <li class="nav-item">
             <RouterLink class="nav-link" to="/register" @click="menuOpen = false">
               Register
             </RouterLink>
-          </li>
+          </li> -->
 
           <li class="nav-item">
             <RouterLink class="nav-link" to="/matcher" @click="menuOpen = false">
