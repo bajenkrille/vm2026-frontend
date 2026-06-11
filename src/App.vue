@@ -125,6 +125,12 @@
               Tipsrader
             </RouterLink>
           </li>
+
+          <li class="nav-item">
+            <RouterLink class="nav-link" to="/stallning" @click="menuOpen = false">
+              Ställning
+            </RouterLink>
+          </li>
 <!-- 
           <li class="nav-item">
             <RouterLink class="nav-link" to="/register" @click="menuOpen = false">
