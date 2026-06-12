@@ -143,12 +143,12 @@
               Matcher
             </RouterLink>
           </li>
-
+<!-- 
           <li class="nav-item">
             <RouterLink class="nav-link" to="/tippa" @click="menuOpen = false">
               Tippa
             </RouterLink>
-          </li>
+          </li> -->
           <!-- <li class="nav-item">
             <RouterLink class="nav-link" to="/allatips" @click="menuOpen = false">
               Alla tips
