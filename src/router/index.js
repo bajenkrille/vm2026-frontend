@@ -23,6 +23,12 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
+      path: '/ligor',
+      name: 'ligor',
+      component: () => import('../views/LigaView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/stallning',
       name: 'stallning',
       component: () => import('../views/StallningView.vue'),

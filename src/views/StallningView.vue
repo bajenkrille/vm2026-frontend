@@ -9,7 +9,9 @@
 
   const calculateTotalPoints = () => {
     const points = tipsStore.pointsArray
+    console.log("Pointsssss: ",points);
     const deltagare = deltagareStore.deltagare
+    console.log("Deltagare: ",deltagare);
     points.forEach(obj => {
       if (!pointsPerUser.value.some(i => i.userId === obj.deltagareId)){
         const deltagaren = deltagare.find(d => d.id === obj.deltagareId)
@@ -23,7 +25,7 @@
       item.points += obj.points
     })
     pointsPerUser.value.sort((a,b) => b.points - a.points)
-    console.log("pointsPerUser: ",pointsPerUser); 
+    console.log("pointsPerUser: ",pointsPerUser.value); 
   }
 
   onMounted(async () => {
