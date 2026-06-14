@@ -105,6 +105,7 @@
       validationErrors.value = true;
     }
 
+    await ligorStore.getLigor()
     // ligaData.private = ""
   }
 
