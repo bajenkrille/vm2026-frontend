@@ -32,7 +32,7 @@ const onSubmit = async () => {
 	console.log("STATUS: ", result.status);
 	if (result.status === 200) {
 		// router.replace("/tippa");
-    const redirect = route.query.redirect || "/tippa"
+    const redirect = route.query.redirect || "/stallning"
     router.replace(redirect)
 	}
 };
