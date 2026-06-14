@@ -20,7 +20,7 @@ onMounted(() => {
 });
 
 const deltagarSida = ref(0)
-const deltagarePerSida = ref('5')
+const deltagarePerSida = ref('10')
 
 const setDeltagarePerSida = (antal) => {
 	deltagarePerSida.value = antal
