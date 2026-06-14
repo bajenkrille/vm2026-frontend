@@ -17,6 +17,10 @@
   const valdLigaObj = computed(() =>
     ligorStore.ligor.find(l => l.id === valdLiga.value)
   )
+
+  const skapadAv = computed(() => 
+    deltagareStore.deltagare.find(d => d.id === valdLigaObj.value?.creator_id).nick_name
+  )
   
   const valdLiga = ref('')
   // let ligaDeltagare = []
@@ -184,6 +188,7 @@
       <div v-if="valdLiga">
         <h3>{{ valdLigaObj?.liga_name }}</h3>
         <p>{{ valdLigaObj?.description }}</p>
+        <p style="font-size: 12px;">Skapad av {{ skapadAv }}</p>
         <div class="row">
           <div class="col-1 bg-light border"><b>Plats</b></div>
           <div class="col-4 bg-light border"><b>Användarnamn</b></div>
