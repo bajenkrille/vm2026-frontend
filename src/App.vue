@@ -131,6 +131,12 @@
               Ställning
             </RouterLink>
           </li>
+
+          <li class="nav-item">
+            <RouterLink class="nav-link" to="/ligor" @click="menuOpen = false">
+              Ligor
+            </RouterLink>
+          </li>
 <!-- 
           <li class="nav-item">
             <RouterLink class="nav-link" to="/register" @click="menuOpen = false">

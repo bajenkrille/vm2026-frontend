@@ -48,7 +48,7 @@
     const inloggadUser = loginStore.userName
     const inloggadDeltagare = deltagareAll.find(d => d.nick_name === inloggadUser)
     console.log("Aktuell liga: ",valdLigaObj.value);
-    if (valdLigaObj.value.private && ligaDeltagare.find(n => n.deltagare_id === inloggadDeltagare.id)){
+    if (valdLigaObj.value.private && !ligaDeltagare.find(n => n.deltagare_id === inloggadDeltagare.id)){
       console.log("deltagare_iddddd: ",inloggadDeltagare.id);
       ligaAccessMessage.value = "Du är inte medlem av ligan och har inte behörighet att se den.";
       ligaAccessErrors.value = true;

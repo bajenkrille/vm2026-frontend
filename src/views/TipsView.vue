@@ -51,7 +51,7 @@ const onSubmit = async () => {
 		tipsSentMessage.value = "Ditt tips har skickats in. Ett email ska också ha skickats till dig."
 	  showTipsSentModal.value = true
 	} catch (error) {
-		tipsSentMessage.value = "Något gick fel. Försök igen."
+		tipsSentMessage.value = "Det går inte att tippa längre. Du kan se din rad under fliken Tipsrader."
 		showTipsSentModal.value = true
 	}
 	console.log("Heja Bajen ");
