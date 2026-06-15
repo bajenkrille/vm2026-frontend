@@ -44,9 +44,14 @@ const router = createRouter({
       component: () => import('../views/VMGuideView.vue'),
     },
     {
+      path: '/deltagarestatus',
+      name: 'deltagarestatus',
+      component: () => import('../views/DeltagareView.vue'),
+    },
+    {
       path: '/deltagare',
       name: 'deltagare',
-      component: () => import('../views/DeltagareView.vue'),
+      component: () => import('../views/DeltagareEnkelView.vue'),
     },
     {
       path: '/login',

@@ -121,6 +121,12 @@
           </li>
 
           <li class="nav-item">
+            <RouterLink class="nav-link" to="/deltagare" @click="menuOpen = false">
+              Vem är vem
+            </RouterLink>
+          </li>
+
+          <li class="nav-item">
             <RouterLink class="nav-link" to="/allatips" @click="menuOpen = false">
               Tipsrader
             </RouterLink>
