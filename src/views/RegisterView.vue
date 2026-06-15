@@ -76,6 +76,7 @@ const onSubmit = async () => {
 <template>
 	<br />
 	<h2 class="mb-5">Registrera dig för att komma igång och tippa!</h2>
+	<p>Denna sida är stängd.</p>
 	<OneOptionModal
 		v-if="validationErrors"
 		title="Fel, fel, fel!"
@@ -93,7 +94,7 @@ const onSubmit = async () => {
 		@cancel="logout"
 	/>
 
-	<form @submit.prevent="onSubmit" action="">
+	<form @submit.prevent="onSubmit" action="" hidden>
 		<div class="row mb-3">
 			<div class="col">
 				<label for="fornamn" class="form-label">Förnamn *</label>
