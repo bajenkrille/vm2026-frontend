@@ -1,8 +1,15 @@
 <script setup>
   import { useDeltagareStore } from '@/stores/deltagareStore'
-  import { onMounted, ref } from 'vue';
+  import { onMounted } from 'vue';
 
   const deltagareStore = useDeltagareStore()
+
+  const deltagare = deltagareStore.deltagareStatus
+  deltagare.sort((a, b) =>
+  a.user.localeCompare(b.user, 'sv', {
+    sensitivity: 'base'
+  })
+);
 
   onMounted(() => {
     deltagareStore.getDeltagareAndCompleteness()
@@ -17,7 +24,7 @@
     <div class="col-4 bg-light border"><b>Användarnamn</b></div>
     <div class="col-8 bg-light border"><b>För- och efternamn</b></div>
   </div>
-  <div class="row" v-for="deltagaren in deltagareStore.deltagareStatus" :key="deltagaren.user">
+  <div class="row" v-for="deltagaren in deltagare" :key="deltagaren.user">
     <div class="col-4 bg-light border">{{ deltagaren.user }}</div>
     <div class="col-8 bg-light border">{{ deltagaren.fornamn }}&nbsp;{{ deltagaren.efternamn }}</div>
   </div>
