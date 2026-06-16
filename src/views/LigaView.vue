@@ -11,7 +11,7 @@
   const tipsStore = useTipsStore()
   const loginStore = useLoginStore()
   const selected = ref([]);
-  const activeTab = ref('home')
+  const activeTab = ref('skapa')
   let pointsPerUser = ref([])
 
   const valdLigaObj = computed(() =>
@@ -117,6 +117,10 @@
     await deltagareStore.getDeltagare()
     await tipsStore.getAndStorePoints()
     await ligorStore.getLigor()
+    if (ligorStore.ligor.length > 0) {
+    valdLiga.value = ligorStore.ligor[0].id
+  }
+
   })
 </script>
 
@@ -137,6 +141,7 @@
 	/>
 <div class="container">
   <h1 class="mt-3 mb-5">Ligor</h1>
+  <p>Skapa eller ändra i en liga eller kolla ställningen i ligan.</p>
   <ul class="nav nav-tabs">
     <li class="nav-item">
       <button
