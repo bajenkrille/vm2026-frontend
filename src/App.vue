@@ -68,7 +68,7 @@
 		@confirm="logoutModal = false"
 	/>
 
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
     <div class="container-fluid">
       <RouterLink class="navbar-brand" to="/">
         The one and only...2026
