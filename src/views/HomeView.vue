@@ -1,7 +1,18 @@
 <script setup>
-  import { ref } from 'vue'
+  import { ref, onMounted } from 'vue'
   import router from "@/router"
   import TwoOptionModal from "@/components/TwoOptionModal.vue"
+  import { useMatcherStore } from '@/stores/matcherStore'
+  import { useTipsStore } from '@/stores/tipsStore'
+
+  const matcherStore = useMatcherStore()
+  const tipsStore = useTipsStore()
+
+  const showPersonal = ref(false)
+
+  const loggedIn = () => {
+    showPersonal.value = localStorage.getItem("userName") !== null ? true : false
+  }
 
   const showRules1 = ref(false)
   const showRules2 = ref(false)
@@ -96,6 +107,17 @@
     router.replace("/register");
   }
 
+  const deltagarensTips = (x) => {
+    const tipset = tipsStore.tips.find(t => t.matchId === x)
+    return `${tipset.tips[0]} - ${tipset.tips[1]}`
+  }
+
+  onMounted(async () => {
+    await matcherStore.getTodaysGames()
+    await tipsStore.getTips()
+    loggedIn()
+  })
+
 </script>
 
 <template>
@@ -132,10 +154,23 @@
 
     <h1 class="mt-3">Välkommen!</h1>
     <h3>The One and Only VM-tips 2026 är här!</h3>
-    <p>Klicka nedan för att läsa reglerna och registrera dig för 2026 års kanske största evenemang.</p>
-    <p>Notera gärna att det finns en Tipsguide i menyn som kan hjälpa (eller stjälpa) med att få reda i lagdjungeln.</p>
-    <div class="modal-message">
+    <p>Klicka nedan för att läsa reglerna. Notera gärna att det finns en Tipsguide i menyn.</p>
+    <p>Om du loggar in kan du se dina tips för dagens och nattens matcher.</p>
+    <div class="modal-message mb-5">
       <button @click="openRules" type="button" class="btn btn-dark">Regler</button>
+    </div>
+    <div v-if="showPersonal">
+      <h5>Dina tips för dagens och nattens matcher</h5>
+      <div class="row">
+        <div class="col-1 bg-light border"><b>Match#</b></div>
+        <div class="col-4 bg-light border"><b>Lagen</b></div>
+        <div class="col-2 bg-light border"><b>Ditt tips</b></div>
+      </div>
+      <div class="row" v-for="matchen in matcherStore.dagens" :key="matchen.id">
+        <div class="col-1 bg-light border">{{ matchen.id }}</div>
+        <div class="col-4 bg-light border">{{ matchen.home }}&nbsp;-&nbsp;{{ matchen.away }}</div>
+        <div class="col-2 bg-light border">{{ deltagarensTips(matchen.id)}}</div>
+      </div>
     </div>
   </main>
 </template>

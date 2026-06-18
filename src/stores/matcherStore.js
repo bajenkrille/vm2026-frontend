@@ -17,7 +17,8 @@ export const useMatcherStore = defineStore('matcher', {
         //   place: 'Mdonna di Campiglio',
         //   played: false,
         // }
-      ]
+      ],
+      dagens: []
     }
   },
   actions: {
@@ -26,6 +27,16 @@ export const useMatcherStore = defineStore('matcher', {
         const response = await fetch("/api/matcher");
         const data = await response.json();
         this.games = data
+        console.log(data);
+      } catch (error) {
+        console.error("Request failed:", error);
+      }
+    },
+    async getTodaysGames(){
+      try {
+        const response = await fetch("/api/matcher/today");
+        const data = await response.json();
+        this.dagens = data
         console.log(data);
       } catch (error) {
         console.error("Request failed:", error);
