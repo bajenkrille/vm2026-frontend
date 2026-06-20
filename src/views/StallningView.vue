@@ -26,6 +26,8 @@
     })
     pointsPerUser.value.sort((a,b) => b.points - a.points)
     console.log("pointsPerUser: ",pointsPerUser.value); 
+    tipsStore.stallning = pointsPerUser.value
+    console.log("tipsStore.stallning: ",tipsStore.stallning);
   }
 
   onMounted(async () => {
@@ -38,6 +40,7 @@
 <template>
 <div class="container">
   <h1 class="mt-3 mb-5">Ställning</h1>
+  <h3 class="text-danger">Det verkar ha blivit något fel med poängräkningen. Återkommer när det fixats.</h3>
 
   <div class="row">
     <div class="col-1 bg-light border"><b>Plats</b></div>
