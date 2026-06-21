@@ -40,7 +40,7 @@
 <template>
 <div class="container">
   <h1 class="mt-3 mb-5">Ställning</h1>
-  <!-- <h3 class="text-danger">Det verkar ha blivit något fel med poängräkningen. Återkommer när det fixats.</h3> -->
+  <h3 class="text-warning">Poängen har räknats om efter ett tidigare mindre fel. De flesta har nu färre poäng.</h3>
 
   <div class="row">
     <div class="col-1 bg-light border"><b>Plats</b></div>
