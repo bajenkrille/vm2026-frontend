@@ -144,8 +144,8 @@
       console.log("Narmaste: ", startIndex, endIndex, narmaste);
       const deltagareIds = narmaste.map(d => d.userId)
       console.log("deltagareIds: ",deltagareIds);
-      valdaDeltagare.value = deltagareStore.deltagare.filter(d => deltagareIds.includes(d.id))
-    } else {
+      valdaDeltagare.value = deltagareIds.map(id => deltagareStore.deltagare.find(d => d.id === id)
+)    } else {
       const ligaId = nameIdArray.find(l => l.name === valdLiga.value).id
       await ligorStore.getLigaDeltagare(ligaId)
       const deltagareIds = ligorStore.deltagare.filter(d => d.liga_id === ligaId).map(d => d.deltagare_id)
@@ -180,19 +180,6 @@
   }
   const deltagarSida = ref(0)
   const deltagarePerSida = ref('15')
-
-  // const setDeltagarePerSida = (antal) => {
-  //   deltagarePerSida.value = antal
-  //   showMenu.value = false
-  // }
-
-  // const valdaDeltagare = computed(() => {
-  //   const start = deltagarSida.value * deltagarePerSida.value
-  //   console.log("start: ",start)
-  //   console.log("Deltagare: ",deltagareStore.deltagare);
-  //   console.log("valdaDeltagare: ",deltagareStore.deltagare.slice(start, start + deltagarePerSida.value))
-  //   return deltagareStore.deltagare.slice(start, start + deltagarePerSida.value)
-  // })
 
   onMounted(async () => {
     await matcherStore.getTodaysGames()
