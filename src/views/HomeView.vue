@@ -261,7 +261,6 @@
         <div class="col-4 bg-light border">{{ matchen.home }}&nbsp;-&nbsp;{{ matchen.away }}</div>
         <div class="col-2 bg-light border">{{ deltagarensTips(matchen.id)}}</div>
       </div> -->
-    </div>
     <table class="table table-success table-hover tips-table">
 			<thead>
 				<tr>
@@ -300,6 +299,7 @@
 				</tr>
 			</tbody>
 		</table>
+  </div>
 
   </main>
 </template>
