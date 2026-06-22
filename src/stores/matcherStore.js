@@ -1,4 +1,7 @@
 import { defineStore } from 'pinia'
+import { ref } from "vue";
+import { useDeltagareStore } from './deltagareStore';
+import { useTipsStore } from './tipsStore';
 
 export const useMatcherStore = defineStore('matcher', {
   state: () => {
@@ -55,7 +58,35 @@ export const useMatcherStore = defineStore('matcher', {
         console.log("Lagrade resultat: ",data);
       } catch (error) {
         console.error("Request failed:", error);
-      }
-    
-    }  }
+      }  
+    },
+    async calculateTotalPoints(pointsPerUser){
+      const tipsStore = useTipsStore()
+      const deltagareStore = useDeltagareStore()
+      // const pointsPerUser = ref([])
+      await tipsStore.getAndStorePoints()
+
+      const points = tipsStore.pointsArray
+      console.log("Pointsssss: ",points);
+      const deltagare = deltagareStore.deltagare
+      console.log("Deltagare: ",deltagare);
+      points.forEach(obj => {
+        // console.log("obj: ",obj);
+        if (!pointsPerUser.value.some(i => i.userId === obj.deltagareId)){
+          const deltagaren = deltagare.find(d => d.id === obj.deltagareId)
+          pointsPerUser.value.push({
+            userId: obj.deltagareId,
+            userName: deltagaren.nick_name,
+            points: 0
+          })
+        }
+        const item = pointsPerUser.value.find(i => i.userId === obj.deltagareId)
+        item.points += obj.points
+      })
+      pointsPerUser.value.sort((a,b) => b.points - a.points)
+      console.log("pointsPerUser: ",pointsPerUser.value); 
+      tipsStore.stallning = pointsPerUser.value
+      console.log("matcherStore - tipsStore.stallning: ",tipsStore.stallning);
+    }
+  }
 })

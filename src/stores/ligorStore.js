@@ -19,7 +19,8 @@ export const useLigorStore = defineStore('ligor', {
         //   played: false,
         // }
       ],
-      ligor: []
+      ligor: [],
+      minaLigor: []
     }
   },
   actions: {
@@ -28,7 +29,7 @@ export const useLigorStore = defineStore('ligor', {
         const response = await fetch(`/api/ligor/deltagare?ligaId=${liga}`)
         const data = await response.json();
         this.deltagare = data
-        console.log("I deltagareStore: ",this.deltagare);
+        console.log("Ligadeltagare: ",this.deltagare);
       } catch (error) {
         console.error("Request failed:", error);
       }
@@ -38,8 +39,23 @@ export const useLigorStore = defineStore('ligor', {
       try {
         const response = await fetch("/api/ligor");
         const data = await response.json();
-        console.log(data);
+        console.log("Ligor: ",data);
         this.ligor = data
+      } catch (error) {
+        console.error("Request failed:", error);
+      }    
+    },
+    async getMinaLigor(){
+      try {
+        const response = await fetch("/api/ligor/minaLigor", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Accept: "application/json"        }
+        });
+        const data = await response.json();
+        console.log("Mina ligor: ",data);
+        this.minaLigor = data
       } catch (error) {
         console.error("Request failed:", error);
       }    

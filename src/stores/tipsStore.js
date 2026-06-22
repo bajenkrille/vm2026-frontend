@@ -24,7 +24,8 @@ export const useTipsStore = defineStore('tips', {
       tips: JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"),
       tipsMap: {},
       pointsMap: {},
-      pointsArray: []
+      pointsArray: [],
+      stallning: []
     }
   },
   actions: {
@@ -42,7 +43,7 @@ export const useTipsStore = defineStore('tips', {
       // this.tips[id][tipIndex] = value;
       console.log("Sparat tips: ",match.tips[index]);
       console.log("VALUE:", value);
-console.log("TYPE:", typeof value);
+      console.log("TYPE:", typeof value);
     
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.tips));
     },

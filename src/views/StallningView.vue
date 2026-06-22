@@ -1,46 +1,48 @@
 <script setup>
   import { useDeltagareStore } from '@/stores/deltagareStore'
   import { useTipsStore } from '@/stores/tipsStore'
+  import { useMatcherStore } from '@/stores/matcherStore'
   import { onMounted, ref } from 'vue';
 
   const deltagareStore = useDeltagareStore()
   const tipsStore = useTipsStore()
-  const pointsPerUser = ref([])
+  const matcherStore = useMatcherStore()
+  let pointsPerUser = ref([])
 
-  const calculateTotalPoints = () => {
-    const points = tipsStore.pointsArray
-    console.log("Pointsssss: ",points);
-    const deltagare = deltagareStore.deltagare
-    console.log("Deltagare: ",deltagare);
-    points.forEach(obj => {
-      if (!pointsPerUser.value.some(i => i.userId === obj.deltagareId)){
-        const deltagaren = deltagare.find(d => d.id === obj.deltagareId)
-        pointsPerUser.value.push({
-          userId: obj.deltagareId,
-          userName: deltagaren.nick_name,
-          points: 0
-        })
-      }
-      const item = pointsPerUser.value.find(i => i.userId === obj.deltagareId)
-      item.points += obj.points
-    })
-    pointsPerUser.value.sort((a,b) => b.points - a.points)
-    console.log("pointsPerUser: ",pointsPerUser.value); 
-    tipsStore.stallning = pointsPerUser.value
-    console.log("tipsStore.stallning: ",tipsStore.stallning);
-  }
+  // const calculateTotalPoints = () => {
+  //   const points = tipsStore.pointsArray
+  //   console.log("Pointsssss: ",points);
+  //   const deltagare = deltagareStore.deltagare
+  //   console.log("Deltagare: ",deltagare);
+  //   points.forEach(obj => {
+  //     if (!pointsPerUser.value.some(i => i.userId === obj.deltagareId)){
+  //       const deltagaren = deltagare.find(d => d.id === obj.deltagareId)
+  //       pointsPerUser.value.push({
+  //         userId: obj.deltagareId,
+  //         userName: deltagaren.nick_name,
+  //         points: 0
+  //       })
+  //     }
+  //     const item = pointsPerUser.value.find(i => i.userId === obj.deltagareId)
+  //     item.points += obj.points
+  //   })
+  //   pointsPerUser.value.sort((a,b) => b.points - a.points)
+  //   console.log("pointsPerUser: ",pointsPerUser.value); 
+  //   tipsStore.stallning = pointsPerUser.value
+  //   console.log("tipsStore.stallning: ",tipsStore.stallning);
+  // }
 
   onMounted(async () => {
     await deltagareStore.getDeltagare()
     await tipsStore.getAndStorePoints()
-    calculateTotalPoints()
+    matcherStore.calculateTotalPoints(pointsPerUser)
   })
 </script>
 
 <template>
 <div class="container">
   <h1 class="mt-3 mb-5">Ställning</h1>
-  <h3 class="text-warning">Poängen har räknats om efter ett tidigare mindre fel. De flesta har nu färre poäng.</h3>
+  <!-- <h3 class="text-warning">Poängen har räknats om efter ett tidigare mindre fel. De flesta har nu färre poäng.</h3> -->
 
   <div class="row">
     <div class="col-1 bg-light border"><b>Plats</b></div>

@@ -1,13 +1,18 @@
 <script setup>
-  import { ref, onMounted } from 'vue'
+  import { ref, watch, computed, onMounted } from 'vue'
   import router from "@/router"
   import TwoOptionModal from "@/components/TwoOptionModal.vue"
   import { useMatcherStore } from '@/stores/matcherStore'
   import { useTipsStore } from '@/stores/tipsStore'
+  import { useDeltagareStore } from "@/stores/deltagareStore"
+  import { useLigorStore } from "@/stores/ligorStore"
 
   const matcherStore = useMatcherStore()
   const tipsStore = useTipsStore()
+  const deltagareStore = useDeltagareStore()
+  const ligorStore = useLigorStore()
 
+  const hovered = ref(null)
   const showPersonal = ref(false)
 
   const loggedIn = () => {
@@ -107,14 +112,97 @@
     router.replace("/register");
   }
 
+  const valdLiga = ref('')
+  const valdaDeltagare = ref([])
+
+  const getMyUserId = () => {
+    const myUserName = localStorage.getItem("userName")
+    return deltagareStore.deltagare.find(d => d.nick_name === myUserName).id
+  }
+  
+  watch(valdLiga, async (newLigaId) => {
+    if (!newLigaId) return
+    console.log("JAG ÄR HÄÄÄÄÄR!! ", valdLiga.value);
+    if (valdLiga.value === "Mitt tips"){
+      const myUserId = getMyUserId()
+      console.log("myUserId: ", myUserId);
+      valdaDeltagare.value = []
+      valdaDeltagare.value.push(deltagareStore.deltagare.find(d => d.id === myUserId))
+      console.log("valdaDeltagare: ",valdaDeltagare.value);
+    } else if (valdLiga.value === "Närmaste 10 konkurrenter")
+    {
+      const stallning = tipsStore.stallning
+      console.log("Stallning: ",stallning);
+      const myUserId = getMyUserId()
+      console.log("myUserId: ",myUserId);
+      const placering = stallning.findIndex(item => item.userId === myUserId)
+      console.log("Placering: ",placering);
+      const startIndex = placering - 4 >= 0 ? placering - 4 : 0
+      const addToEndIndex = placering - startIndex
+      const endIndex = placering + 5 + addToEndIndex < stallning.length ? placering + 5 + addToEndIndex : stallning.length
+      const narmaste = stallning.slice(startIndex, endIndex)
+      console.log("Narmaste: ", startIndex, endIndex, narmaste);
+      const deltagareIds = narmaste.map(d => d.userId)
+      console.log("deltagareIds: ",deltagareIds);
+      valdaDeltagare.value = deltagareStore.deltagare.filter(d => deltagareIds.includes(d.id))
+    } else {
+      const ligaId = nameIdArray.find(l => l.name === valdLiga.value).id
+      await ligorStore.getLigaDeltagare(ligaId)
+      const deltagareIds = ligorStore.deltagare.filter(d => d.liga_id === ligaId).map(d => d.deltagare_id)
+      valdaDeltagare.value = deltagareStore.deltagare.filter(d => deltagareIds.includes(d.id))
+      console.log("valdaDeltagare: ",valdaDeltagare.value);
+    }
+  })
+
   const deltagarensTips = (x) => {
     const tipset = tipsStore.tips.find(t => t.matchId === x)
+    console.log("tipset: ",tipsStore.tips);
     return `${tipset.tips[0]} - ${tipset.tips[1]}`
   }
 
+
+  const alternativArray = ref([])
+  const nameIdArray = []
+  const skapaAlternativArray = () => {
+    alternativArray.value = ["Mitt tips", "Närmaste 10 konkurrenter"]
+    ligorStore.minaLigor.forEach((ml) => {
+      // console.log("ml: ",ml);
+      const liga = ligorStore.ligor.find(al => 
+        // console.log("idn: ",ml.liga_id, al.id,
+        // "equal?", ml.liga_id === al.id);
+        al.id === ml.liga_id
+      )
+      alternativArray.value.push(liga.liga_name)
+      nameIdArray.push({id: liga.id, name: liga.liga_name })
+    })
+    console.log("alternativArray: ",alternativArray);
+    console.log("nameIdArray", nameIdArray);
+  }
+  const deltagarSida = ref(0)
+  const deltagarePerSida = ref('15')
+
+  // const setDeltagarePerSida = (antal) => {
+  //   deltagarePerSida.value = antal
+  //   showMenu.value = false
+  // }
+
+  // const valdaDeltagare = computed(() => {
+  //   const start = deltagarSida.value * deltagarePerSida.value
+  //   console.log("start: ",start)
+  //   console.log("Deltagare: ",deltagareStore.deltagare);
+  //   console.log("valdaDeltagare: ",deltagareStore.deltagare.slice(start, start + deltagarePerSida.value))
+  //   return deltagareStore.deltagare.slice(start, start + deltagarePerSida.value)
+  // })
+
   onMounted(async () => {
     await matcherStore.getTodaysGames()
-    await tipsStore.getTips()
+    await tipsStore.getAllTips()
+    await deltagareStore.getDeltagare()
+    await ligorStore.getLigor()
+    await ligorStore.getMinaLigor()
+    console.log("Home - mina ligor: ",ligorStore.minaLigor);
+    matcherStore.calculateTotalPoints(ref([]))
+    skapaAlternativArray()
     loggedIn()
   })
 
@@ -155,13 +243,28 @@
     <h1 class="mt-3">Välkommen!</h1>
     <h3>The One and Only VM-tips 2026 är här!</h3>
     <p>Klicka nedan för att läsa reglerna. Notera gärna att det finns en Tipsguide i menyn.</p>
-    <p>Om du loggar in kan du se dina tips för dagens och nattens matcher.</p>
+    <p>Om du loggar in kan du se dina pch andra valda tips för dagens och nattens matcher.</p>
     <div class="modal-message mb-5">
       <button @click="openRules" type="button" class="btn btn-dark">Regler</button>
     </div>
     <div v-if="showPersonal">
-      <h5>Dina tips för dagens och nattens matcher</h5>
-      <div class="row">
+      <h5>Välj de tips du vill se för dagens och nattens matcher</h5>
+      <div class="">
+        <p class="mb-3"></p>
+        <select class="form-select form-select-sm" style="width: 250px;" v-model="valdLiga">
+          <option disabled value="">Välj alternativ</option>
+          <option
+            v-for="liga in alternativArray"
+            :key="liga"
+            :value="liga"
+          >
+          {{ liga }}
+          </option>
+        </select>
+        <p class="mb-5"></p>
+      </div>
+
+      <!-- <div class="row">
         <div class="col-1 bg-light border"><b>Match#</b></div>
         <div class="col-4 bg-light border"><b>Lagen</b></div>
         <div class="col-2 bg-light border"><b>Ditt tips</b></div>
@@ -170,13 +273,145 @@
         <div class="col-1 bg-light border">{{ matchen.id }}</div>
         <div class="col-4 bg-light border">{{ matchen.home }}&nbsp;-&nbsp;{{ matchen.away }}</div>
         <div class="col-2 bg-light border">{{ deltagarensTips(matchen.id)}}</div>
-      </div>
+      </div> -->
     </div>
+    <table class="table table-success table-hover tips-table">
+			<thead>
+				<tr>
+					<th class="col_match" scope="col">#</th>
+					<th class="col_team" scope="col">Match</th>
+ 					<th v-for="deltagare in valdaDeltagare" :key="deltagare.id" class="col_tips" scope="col">
+						<span class="username-wrapper" @mouseenter="hovered = deltagare.nick_name" @mouseleave="hovered = null">
+							<span class="username-cell">{{ deltagare.nick_name }}</span>
+							<span v-if="hovered === deltagare.nick_name" class="custom-tooltip">
+								{{ deltagare.nick_name }}
+							</span>
+						</span>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="game in matcherStore.dagens" :key="game.id">
+					<th class="" scope="row">{{ game.id }}</th>
+					<td>
+						<div class=" d-flex align-items-left">
+							<span class="flex-grow-1d-inline-block text-truncate team">{{ game.home }}</span>
+              <span>&nbsp;-&nbsp;</span>
+							<span class="flex-grow-1 d-inline-block text-truncate team">{{game.away}}</span>
+						</div>
+					</td>
+ 					<td v-for="usr in valdaDeltagare" :key="usr.id">
+						<div class="d-flex">
+							<!-- <span>{{ deltagarensTips(game.id)}}</span> -->
+							<span>{{ tipsStore.tipsMap[usr.id]?.[game.id]?.join('-') ?? '' }}</span>
+							<!-- <span class="rounded-circle points_ball">
+							</span> -->
+							<!-- <span class="rounded-circle points_ball"  :class="getPointsColor(tipsStore.pointsMap[usr.id]?.[game.id] ?? '')">
+							</span> -->
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
   </main>
 </template>
 
 <style scoped>
   .modal-message {
     white-space: pre-line;
+  }
+  .results_ball {
+    height: 25px;
+    width: 25px;
+    font-size: large;
+  }
+  .points_ball {
+    height: 10px;
+    width: 10px;
+    font-size: large;
+  }
+    
+  .tips-table {
+    white-space: nowrap;
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .sticky-col {
+    position: sticky;
+    z-index: 2;
+  }
+
+  .tipsruta {
+    width: 2.5rem;
+    height: 2rem;
+  }
+
+  .col_match {
+    width: 25px;
+  }
+
+  .col_date {
+    width: 15px;
+  }
+  /* 
+  .col_group {
+    width: 8%;
+    text-align: center;
+  } */
+
+  .col_dash {
+    width: 2px;
+  }
+
+  .col_team {
+    width: 150px;
+    text-align: left;
+  }
+
+  .col_tips {
+    width: 100px;
+  }
+
+  .username-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .username-cell {
+    max-width: 70px;      /* choose what fits */
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
+  }
+
+  .custom-tooltip {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding: 6px 10px;
+    background: #333;
+    color: white;
+    font-size: 1rem;
+    white-space: nowrap;
+    z-index: 1000;
+  }
+
+  .tipsruta {
+    width: 2.5rem;
+    height: 2rem;
+  }
+
+  .team {
+    max-width: 170px;
+  }
+
+  @media (max-width: 768px) {
+    .team {
+      max-width: 100px;
+    }
   }
 </style>
