@@ -50,9 +50,10 @@ export const useMatcherStore = defineStore('matcher', {
       try {
         const response = await fetch("/api/matcher/update");
         const data = await response.json();
-        this.lastUpdate = data
-          .replace('T', ' ')
-          .replace('.000Z', '')
+        this.lastUpdate = new Date(data)
+        .toLocaleString('sv-SE')
+        .replace(',', '')
+        
         console.log("Last update: ",this.lastUpdate);
       } catch (error) {
         console.error("Request failed:", error);
