@@ -3,6 +3,7 @@
   import { useLigorStore } from '@/stores/ligorStore'
   import { useTipsStore } from '@/stores/tipsStore'
   import { useLoginStore } from '@/stores/loginStore'
+  import { useMatcherStore } from '@/stores/matcherStore'
   import { onMounted, ref, reactive, watch, computed } from 'vue';
   import OneOptionModal from "@/components/OneOptionModal.vue";
 
@@ -10,6 +11,7 @@
   const ligorStore = useLigorStore()
   const tipsStore = useTipsStore()
   const loginStore = useLoginStore()
+  const matcherStore = useMatcherStore()
   const selected = ref([]);
   const activeTab = ref('skapa')
   let pointsPerUser = ref([])
@@ -113,9 +115,70 @@
     // ligaData.private = ""
   }
 
+  const searchText = ref('')
+  const selectedDeltagare = ref(null)
+  const deltagareSelected = ref(false)
+  const showDropdown = ref(false)
+
+  const matchingDeltagare = computed(() => {
+    const q = searchText.value.trim().toLowerCase()
+
+    if (!q) return []
+
+    return deltagareStore.deltagare.filter(d =>
+      d.nick_name?.toLowerCase().includes(q) ||
+      d.first_name?.toLowerCase().includes(q) ||
+      d.last_name?.toLowerCase().includes(q)
+    )
+  })
+
+  let a = ''
+  let b = ''
+  let c = ''
+  let d = ''
+
+  const selectDeltagare = (deltagare) => {
+    selectedDeltagare.value = deltagare
+    searchText.value = deltagare.nick_name
+    showDropdown.value = false
+    a = deltagare.nick_name
+    b = deltagare.first_name
+    c = deltagare.last_name
+    d = deltagare.id
+    deltagareSelected.value = true
+  }
+
+  const searchTextLiga = ref('')
+  const selectedLiga = ref(null)
+  const ligaSelected = ref(false)
+  const showDropdownLiga = ref(false)
+
+  const matchingLiga = computed(() => {
+    const q = searchTextLiga.value.trim().toLowerCase()
+
+    if (!q) return []
+
+    return ligorStore.ligor.filter(l =>
+      l.liga_name?.toLowerCase().includes(q)
+    )
+  })
+
+  let e = ''
+  let h = ''
+
+  const selectLiga = (liga) => {
+    selectedLiga.value = liga
+    searchTextLiga.value = liga.liga_name
+    showDropdownLiga.value = false
+    e = liga.liga_name
+    h = liga.id
+    ligaSelected.value = true
+  }
+
   onMounted(async () => {
     await deltagareStore.getDeltagare()
     await tipsStore.getAndStorePoints()
+    await matcherStore.lastUpdate
     await ligorStore.getLigor()
     if (ligorStore.ligor.length > 0) {
     valdLiga.value = ligorStore.ligor[0].id
@@ -177,6 +240,7 @@
       <!-- <h1 class="mt-3 mb-5">Ställning</h1> -->
       <div class="">
         <p class="mb-5"></p>
+        <p style="font-size: 12px;">Senast uppdaterad {{ matcherStore.lastUpdate }}</p>
         <select class="form-select form-select-sm" style="width: 200px;" v-model="valdLiga">
           <option disabled value="">Välj liga</option>
           <option
@@ -272,7 +336,99 @@
   </div>
 
   <div v-if="activeTab === 'andra'">
-    Inget här än. Kommer snart.
+    <div class="position-relative mt-3">
+      <input
+        v-model="searchTextLiga"
+        class="form-control w-50"
+        
+        placeholder="Sök liga..."
+        @focus="showDropdownLiga = true"
+      />
+
+      <ul
+        v-if="showDropdownLiga && matchingLiga.length"
+        class="list-group position-absolute w-50"
+        style="z-index: 1000;"
+      >
+        <li
+          v-for="liga in matchingLiga"
+          :key="liga.id"
+          class="list-group-item list-group-item-action"
+          @click="selectLiga(liga)"
+        >
+          {{ liga.liga_name }}
+        </li>
+      </ul>
+    </div>
+    <div v-if="ligaSelected">
+      <p>Du vill redigera ligan {{ e }} (id = {{ h }}). Välj deltagare och åtgärd.</p>
+      <!-- <div class="col-3 bg-light border">{{ deltagaren.nick_name }}</div>
+      <div class="col-6 bg-light border">{{ deltagaren.first_name }}&nbsp;{{ deltagaren.last_name }}</div>
+      <div class="col-1 bg-light border"><input type="checkbox" class="form-check-input" v-model="selected" :value="deltagaren.id"></div>
+      <div class="col-1">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="radioDefault" id="radioDefault1">
+          <label class="form-check-label" for="radioDefault1">
+            Default radio
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="radioDefault" id="radioDefault2" checked>
+          <label class="form-check-label" for="radioDefault2">
+            Default checked radio
+          </label>
+        </div>
+      </div> -->
+    </div>
+  </div>
+
+  <div v-if="activeTab === 'andra'">
+    <div class="position-relative mt-3">
+      <input
+        v-model="searchText"
+        class="form-control w-50"
+        
+        placeholder="Sök deltagare..."
+        @focus="showDropdown = true"
+      />
+
+      <ul
+        v-if="showDropdown && matchingDeltagare.length"
+        class="list-group position-absolute w-50"
+        style="z-index: 1000;"
+      >
+        <li
+          v-for="deltagare in matchingDeltagare"
+          :key="deltagare.id"
+          class="list-group-item list-group-item-action"
+          @click="selectDeltagare(deltagare)"
+        >
+          {{ deltagare.nick_name }}
+          <small class="text-muted">
+            {{ deltagare.first_name }} {{ deltagare.last_name }}
+          </small>
+        </li>
+      </ul>
+    </div>
+    <div class="position-relative mt-3 row" v-if="deltagareSelected">
+      <div class="col-1">{{ a }}</div>
+      <div class="col-2">{{ b }}&nbsp;{{ c }}</div>
+      <div class="col-1">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="action" id="add" value="add" v-model="selectedAction">
+          <label class="form-check-label" for="add">
+            Add
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="action" id="remove" value="remove" v-model="selectedAction">
+          <label class="form-check-label" for="remove">
+            Remove
+          </label>
+        </div>
+      </div>
+      <div class="col-6"></div>
+    </div>
   </div>
 
 

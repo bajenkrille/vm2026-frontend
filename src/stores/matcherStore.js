@@ -21,7 +21,8 @@ export const useMatcherStore = defineStore('matcher', {
         //   played: false,
         // }
       ],
-      dagens: []
+      dagens: [],
+      lastUpdate: null
     }
   },
   actions: {
@@ -41,6 +42,18 @@ export const useMatcherStore = defineStore('matcher', {
         const data = await response.json();
         this.dagens = data
         console.log(data);
+      } catch (error) {
+        console.error("Request failed:", error);
+      }
+    },
+    async getLastUpdate(){
+      try {
+        const response = await fetch("/api/matcher/update");
+        const data = await response.json();
+        this.lastUpdate = data
+          .replace('T', ' ')
+          .replace('.000Z', '')
+        console.log("Last update: ",this.lastUpdate);
       } catch (error) {
         console.error("Request failed:", error);
       }

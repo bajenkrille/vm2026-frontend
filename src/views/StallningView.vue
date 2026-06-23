@@ -35,6 +35,7 @@
   onMounted(async () => {
     await deltagareStore.getDeltagare()
     await tipsStore.getAndStorePoints()
+    await matcherStore.getLastUpdate()
     matcherStore.calculateTotalPoints(pointsPerUser)
   })
 </script>
@@ -42,6 +43,7 @@
 <template>
 <div class="container">
   <h1 class="mt-3 mb-5">Ställning</h1>
+  <p style="font-size: 12px;">Senast uppdaterad {{ matcherStore.lastUpdate }}</p>
   <!-- <h3 class="text-warning">Poängen har räknats om efter ett tidigare mindre fel. De flesta har nu färre poäng.</h3> -->
 
   <div class="row">
