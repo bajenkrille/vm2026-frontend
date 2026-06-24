@@ -145,8 +145,8 @@
     } else if (valdLiga.value === "Topp-10") {
       const stallning = tipsStore.stallning
       console.log("Stallning: ",stallning);
-      const topp10 = stallning.slice(0, 9)
-      console.log("topp10: ", 0, 9, topp10);
+      const topp10 = stallning.slice(0, 10)
+      console.log("topp10: ", 0, 10, topp10);
       const deltagareIds = topp10.map(d => d.userId)
       console.log("deltagareIds: ",deltagareIds);
       valdaDeltagare.value = deltagareIds.map(id => deltagareStore.deltagare.find(d => d.id === id))
