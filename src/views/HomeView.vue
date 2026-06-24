@@ -129,14 +129,11 @@
       valdaDeltagare.value = []
       valdaDeltagare.value.push(deltagareStore.deltagare.find(d => d.id === myUserId))
       console.log("valdaDeltagare: ",valdaDeltagare.value);
-    } else if (valdLiga.value === "Närmaste 10 konkurrenter")
-    {
+    } else if (valdLiga.value === "Närmaste 10 konkurrenter") {
       const stallning = tipsStore.stallning
       console.log("Stallning: ",stallning);
       const myUserId = getMyUserId()
-      console.log("myUserId: ",myUserId);
       const placering = stallning.findIndex(item => item.userId === myUserId)
-      console.log("Placering: ",placering);
       const startIndex = placering - 4 >= 0 ? placering - 4 : 0
       const addToEndIndex = placering - startIndex
       const endIndex = placering + 5 + addToEndIndex < stallning.length ? placering + 5 + addToEndIndex : stallning.length
@@ -144,8 +141,16 @@
       console.log("Narmaste: ", startIndex, endIndex, narmaste);
       const deltagareIds = narmaste.map(d => d.userId)
       console.log("deltagareIds: ",deltagareIds);
-      valdaDeltagare.value = deltagareIds.map(id => deltagareStore.deltagare.find(d => d.id === id)
-)    } else {
+      valdaDeltagare.value = deltagareIds.map(id => deltagareStore.deltagare.find(d => d.id === id))
+    } else if (valdLiga.value === "Topp-10") {
+      const stallning = tipsStore.stallning
+      console.log("Stallning: ",stallning);
+      const topp10 = stallning.slice(0, 9)
+      console.log("topp10: ", 0, 9, topp10);
+      const deltagareIds = topp10.map(d => d.userId)
+      console.log("deltagareIds: ",deltagareIds);
+      valdaDeltagare.value = deltagareIds.map(id => deltagareStore.deltagare.find(d => d.id === id))
+    } else {
       const ligaId = nameIdArray.find(l => l.name === valdLiga.value).id
       await ligorStore.getLigaDeltagare(ligaId)
       const deltagareIds = ligorStore.deltagare.filter(d => d.liga_id === ligaId).map(d => d.deltagare_id)
@@ -164,7 +169,7 @@
   const alternativArray = ref([])
   const nameIdArray = []
   const skapaAlternativArray = () => {
-    alternativArray.value = ["Mitt tips", "Närmaste 10 konkurrenter"]
+    alternativArray.value = ["Mitt tips", "Närmaste 10 konkurrenter", "Topp-10"]
     ligorStore.minaLigor.forEach((ml) => {
       // console.log("ml: ",ml);
       const liga = ligorStore.ligor.find(al => 
@@ -235,7 +240,7 @@
       <button @click="openRules" type="button" class="btn btn-dark">Regler</button>
     </div>
     <div v-if="showPersonal">
-      <h5>Välj de tips du vill se för dagens och nattens matcher</h5>
+      <h5>Välj de tips du vill se för dagens och nattens matcher (uppdateras kl. 12)</h5>
       <div class="">
         <p class="mb-3"></p>
         <select class="form-select form-select-sm" style="width: 250px;" v-model="valdLiga">
