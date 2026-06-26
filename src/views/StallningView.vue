@@ -44,7 +44,10 @@
 
 <template>
 <div class="container">
-  <h1 class="mt-3 mb-5">Ställning</h1>
+  <h1 class="mt-3 mb-3">Ställning</h1>
+  <p style="font-size: 14px;">Flest poäng efter 72 matcher vinner. <br>
+    Vid lika poäng räknas först flest 3-poängare.<br> Därefter avgör flest rätt resultat (2- och 3-poängare).<br> 
+    Om det fortfarande är lika, flest poänggivande matcher (1-, 2- och 3-poängare).</p>
   <p style="font-size: 12px;">Senast uppdaterad {{ matcherStore.lastUpdate }}</p>
   <!-- <h3 class="text-warning">Poängen har räknats om efter ett tidigare mindre fel. De flesta har nu färre poäng.</h3> -->
 
