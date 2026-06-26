@@ -36,7 +36,9 @@
     await deltagareStore.getDeltagare()
     await tipsStore.getAndStorePoints()
     await matcherStore.getLastUpdate()
-    matcherStore.calculateTotalPoints(pointsPerUser)
+    await matcherStore.calculateTotalPoints(pointsPerUser)
+    await tipsStore.getPointDetails()
+
   })
 </script>
 
@@ -48,13 +50,19 @@
 
   <div class="row">
     <div class="col-1 bg-light border"><b>Plats</b></div>
-    <div class="col-4 bg-light border"><b>Användarnamn</b></div>
+    <div class="col-3 bg-light border"><b>Användarnamn</b></div>
     <div class="col-1 bg-light border"><b>Poäng</b></div>
+    <div class="col-1 bg-light border"><b class="badge bg-danger text-dark">3p</b></div>
+    <div class="col-1 bg-light border"><b class="badge bg-success text-dark">2p</b></div>
+    <div class="col-1 bg-light border"><b class="badge bg-warning text-dark">1p</b></div>
   </div>
-  <div class="row" v-for="(user, index) in pointsPerUser" :key="user.userId">
+  <div class="row" v-for="(user, index) in tipsStore.stallning" :key="user.userId">
     <div class="col-1 bg-light border">{{ index === 0 || user.points !== pointsPerUser[index - 1].points ? index + 1 : ''}}</div>
-    <div class="col-4 bg-light border">{{ user.userName }}</div>
+    <div class="col-3 bg-light border">{{ user.userName }}</div>
     <div class="col-1 bg-light border">{{ user.points }}</div>
+    <div class="col-1 bg-light border">{{ user.threePointers }}</div>
+    <div class="col-1 bg-light border">{{ user.twoPointers }}</div>
+    <div class="col-1 bg-light border">{{ user.onePointers }}</div>
     <!-- <div class="col-1 border" :class="deltagaren.antal_tips === 72 ? 'bg-success' : 'bg-light'">{{deltagaren.antal_tips}}</div> -->
   </div>
 

@@ -163,6 +163,26 @@ export const useTipsStore = defineStore('tips', {
       console.log("getAndStorePoints: ",data);
       this.pointsArray = data
       this.pointsMap = this.generatePointsMap(data)
+    },
+    async getPointDetails(){
+      
+      const response = await fetch("/api/tippa/details");
+      const data = await response.json();
+      console.log("getPointDetails: ",data);
+
+      data.forEach(row => {
+        const user = this.stallning.find(
+          u => u.userId === Number(row.deltagare_id)
+        )
+      
+        if (!user) return
+      
+        if (row.points === 1) user.onePointers = row._count.points
+        if (row.points === 2) user.twoPointers = row._count.points
+        if (row.points === 3) user.threePointers = row._count.points
+      })
+      console.log("stallningTjoooo: ",this.stallning);
+      // this.pointsMap = this.generatePointsMap(data)
     }
   }
 })
