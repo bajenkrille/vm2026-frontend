@@ -94,7 +94,9 @@ export const useMatcherStore = defineStore('matcher', {
             points: 0,
             onePointers: 0,
             twoPointers: 0,
-            threePointers: 0
+            threePointers: 0,
+            exactResults: 0,
+            matchesWithPoints: 0
           })
         }
         const item = pointsPerUser.value.find(i => i.userId === obj.deltagareId)
