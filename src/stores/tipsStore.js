@@ -181,6 +181,18 @@ export const useTipsStore = defineStore('tips', {
         if (row.points === 2) user.twoPointers = row._count.points
         if (row.points === 3) user.threePointers = row._count.points
       })
+
+      this.stallning.forEach(user => {
+        user.exactResults = user.twoPointers + user.threePointers
+        user.matchesWithPoints =
+          user.onePointers + user.twoPointers + user.threePointers
+      })      
+      this.stallning.sort((a, b) =>
+        b.points - a.points ||
+        b.threePointers - a.threePointers ||
+        b.exactResults - a.exactResults ||
+        b.matchesWithPoints - a.matchesWithPoints
+      )
       console.log("stallningTjoooo: ",this.stallning);
       // this.pointsMap = this.generatePointsMap(data)
     }
