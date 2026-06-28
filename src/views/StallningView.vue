@@ -62,7 +62,7 @@
   </div>
   <div class="row" v-for="(user, index) in tipsStore.stallning" :key="user.userId">
     <div class="col-1 bg-light border">{{ index === 0 || user.points !== pointsPerUser[index - 1].points ? index + 1 : ''}}</div>
-    <div class="col-3 bg-light border">{{ user.userName }}</div>
+    <div class="col-3 bg-light border" :class="{gold: index === 0,silver: index === 1,bronze: index === 2}">{{ user.userName }}</div>
     <div class="col-1 bg-light border">{{ user.points }}</div>
     <div class="col-1 bg-light border">{{ user.threePointers }}</div>
     <div class="col-1 bg-light border">{{ user.twoPointers }}</div>
@@ -110,7 +110,18 @@
   .team {
     max-width: 280px;
   }
-  
+
+  .gold {
+    background-color: #D4AF37 !important;
+  }
+
+  .silver {
+    background-color: #BCC6CC !important;
+  }
+
+  .bronze {
+    background-color: #D7A86E !important;
+  }  
   @media (max-width: 768px) {
     .team {
       max-width: 100px;
